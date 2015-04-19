@@ -1,0 +1,45 @@
+<!--
+  ~ build.xml
+  ~
+  ~ BEAST: Bayesian Evolutionary Analysis by Sampling Trees
+  ~ Copyright (C) 2015 BEAST Developers
+  ~
+  ~ BEAST is free software: you can redistribute it and/or modify it
+  ~ under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License,
+  ~ or (at your option) any later version.
+  ~
+  ~ BEAST is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with BEAST.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project name="BEAST" default="compile" basedir=".">
+
+    <property name="JDK_VERSION" value="1.8"/>
+    <property name="src" location="src"/>
+    <property name="build" location="build"/>
+    <property name="debug" value="true"/>
+
+    <target name="compile">
+        <mkdir dir="${build}"/>
+        <javac source="${JDK_VERSION}"
+               target="${JDK_VERSION}"
+               srcdir="${src}"
+               destdir="${build}"
+               fork="true"
+               includeantruntime="false"
+               debug="${debug}">
+        </javac>
+    </target>
+
+    <target name="test" depends="compile">
+        <echo message="No tests to run."/>
+    </target>
+
+
+</project>
