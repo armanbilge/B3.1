@@ -233,7 +233,7 @@ public final class XMLObject {
     }
 
     public <T extends Identifiable> Optional<T> getChild(final Class<T> c) {
-        return (Optional<T>) getChildren().filter(c::isInstance).findFirst();
+        return (Optional<T>) getChildren().filter(c::isInstance).map(c::cast).findFirst();
     }
 
     public Optional<XMLObject> getChild(final String tag) {
