@@ -43,7 +43,7 @@ public final class XMLObject {
     private final String tag;
     private final Map<String,String> attributes = new HashMap<>();
     private final List<Object> children = new ArrayList<>();
-    private Object nativeObject = null;
+    private Identifiable nativeObject = null;
 
     public XMLObject(final String tag) {
         this.tag = tag;
@@ -57,11 +57,11 @@ public final class XMLObject {
         return nativeObject != null;
     }
 
-    private Optional<Object> getNativeObject() {
+    private Optional<Identifiable> getNativeObject() {
         return Optional.ofNullable(nativeObject);
     }
 
-    public void setNativeObject(final Object nativeObject) {
+    public void setNativeObject(final Identifiable nativeObject) {
         this.nativeObject = nativeObject;
     }
 
@@ -221,7 +221,7 @@ public final class XMLObject {
         else
             return obj;
 
-        final Optional<Object> no = xo.getNativeObject();
+        final Optional<Identifiable> no = xo.getNativeObject();
         if (no.isPresent())
             return no.get();
         else
@@ -232,7 +232,7 @@ public final class XMLObject {
         return processChild(children.get(i));
     }
 
-    public <T> Optional<T> getChild(final Class<T> c) {
+    public <T extends Identifiable> Optional<T> getChild(final Class<T> c) {
         return (Optional<T>) getChildren().filter(c::isInstance).findFirst();
     }
 
