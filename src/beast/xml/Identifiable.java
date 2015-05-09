@@ -30,6 +30,7 @@ import java.io.Serializable;
 public interface Identifiable extends Serializable {
 
     String ID = "id";
+    String IDREF = "idref";
 
     /**
      * @return the id as a string.

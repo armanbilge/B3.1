@@ -38,7 +38,9 @@ import java.util.stream.Stream;
  * @author Alexei Drummond
  * @author Arman Bilge
  */
-public final class XMLObject {
+public final class XMLObject implements Identifiable {
+
+    private static final long serialVersionUID = 1;
 
     private final String tag;
     private final Map<String,String> attributes = new HashMap<>();
@@ -233,7 +235,7 @@ public final class XMLObject {
     }
 
     public <T extends Identifiable> Optional<T> getChild(final Class<T> c) {
-        return (Optional<T>) getChildren().filter(c::isInstance).map(c::cast).findFirst();
+        return getChildren().filter(c::isInstance).map(c::cast).findFirst();
     }
 
     public Optional<XMLObject> getChild(final String tag) {
@@ -364,8 +366,12 @@ public final class XMLObject {
         return hasAttribute(Identifiable.ID);
     }
 
-    public String getId() throws XMLParseException {
-        return getStringAttribute(Identifiable.ID);
+    public String getId() {
+        try {
+            return getStringAttribute(Identifiable.ID);
+        } catch (final XMLParseException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public void setId(final String id) {
@@ -373,11 +379,7 @@ public final class XMLObject {
     }
 
     public String toString() {
-        try {
-            return getTag() + (hasId() ? ":" + getId() : "");
-        } catch (final XMLParseException ex) {
-            throw new RuntimeException(ex);
-        }
+        return getTag() + (hasId() ? ":" + getId() : "");
     }
 
     private static boolean getBoolean(final String value) throws XMLParseException {
