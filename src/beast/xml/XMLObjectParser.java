@@ -20,7 +20,7 @@
 
 package beast.xml;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public interface XMLObjectParser<T extends Identifiable> {
@@ -28,22 +28,22 @@ public interface XMLObjectParser<T extends Identifiable> {
     T parseXMLObject(XMLObject xo, boolean strict) throws XMLParseException;
 
     /**
-     * @return (Java) class of parsed element (i.e. class of object returned in  parseXMLObject)
+     * @return (Java) class of parsed element (i.e. class of object returned in {@link #parseXMLObject(XMLObject, boolean) parseXMLObject})
      */
     Class<T> getReturnType();
 
     /**
-     * @return Parser tag, which is identical to tag of xml element parsed by it.
+     * @return Parser name, which is identical to name of xml element parsed by it.
      */
-    String getTag();
+    String getName();
 
     /**
-     * @return A set of parser tag synonyms (including tag returned by getParserTag)
+     * @return A set of parser name synonyms (including name returned by {@link #getName() getName})
      */
-    default Set<String> getTags() {
-        final Set<String> names = new HashSet<>(2);
-        names.add(getTag());
-        names.add(getClass().getPackage().getName() + "." + getTag());
+    default Set<String> getNames() {
+        final Set<String> names = new LinkedHashSet<>(2);
+        names.add(getName());
+        names.add(getClass().getPackage().getName() + "." + getName());
         return names;
     }
 

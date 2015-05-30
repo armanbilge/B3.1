@@ -42,24 +42,24 @@ public final class XMLObject implements Identifiable {
 
     private static final long serialVersionUID = 1;
 
-    private final String tag;
+    private final String name;
     private final Map<String,String> attributes = new HashMap<>();
     private final List<Object> children = new ArrayList<>();
     private Identifiable nativeObject = null;
 
-    public XMLObject(final String tag) {
-        this.tag = tag;
+    public XMLObject(final String name) {
+        this.name = name;
     }
 
-    public String getTag() {
-        return tag;
+    public String getName() {
+        return name;
     }
 
-    private boolean hasNativeObject() {
+    public boolean hasNativeObject() {
         return nativeObject != null;
     }
 
-    private Optional<Identifiable> getNativeObject() {
+    public Optional<Identifiable> getNativeObject() {
         return Optional.ofNullable(nativeObject);
     }
 
@@ -79,7 +79,7 @@ public final class XMLObject implements Identifiable {
         if (hasAttribute(name))
             return attributes.get(name);
         else
-            throw new XMLParseException("\"" + name + "\" attribute was not found in " + getTag() + " element.");
+            throw new XMLParseException("\"" + name + "\" attribute was not found in " + getName() + " element.");
     }
 
     public void setAttribute(final String name, final String value) {
@@ -238,12 +238,12 @@ public final class XMLObject implements Identifiable {
         return getChildren().filter(c::isInstance).map(c::cast).findFirst();
     }
 
-    public Optional<XMLObject> getChild(final String tag) {
-        return getXMLObjectChildren().filter(xo -> xo.getTag().equals(tag)).findFirst();
+    public Optional<XMLObject> getChild(final String name) {
+        return getXMLObjectChildren().filter(xo -> xo.getName().equals(name)).findFirst();
     }
 
-    public boolean hasChild(final String tag) {
-        return getXMLObjectChildren().anyMatch(xo -> xo.getTag().equals(tag));
+    public boolean hasChild(final String name) {
+        return getXMLObjectChildren().anyMatch(xo -> xo.getName().equals(name));
     }
 
     public void addChild(final XMLObject xo) {
@@ -379,7 +379,7 @@ public final class XMLObject implements Identifiable {
     }
 
     public String toString() {
-        return getTag() + (hasId() ? ":" + getId() : "");
+        return getName() + (hasId() ? ":" + getId() : "");
     }
 
     private static boolean getBoolean(final String value) throws XMLParseException {
