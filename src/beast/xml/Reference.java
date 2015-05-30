@@ -31,6 +31,6 @@ public final class Reference {
     public XMLObject getReferencedObject() { return referencedObject; }
 
     public String toString() {
-        return "@" + referencedObject;
+        return "@" + referencedObject.getId();
     }
 }

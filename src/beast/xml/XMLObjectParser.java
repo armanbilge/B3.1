@@ -38,7 +38,7 @@ public interface XMLObjectParser<T extends Identifiable> {
     String getTag();
 
     /**
-     * @return A list of parser tag synonyms (including tag returned by getParserTag)
+     * @return A set of parser tag synonyms (including tag returned by getParserTag)
      */
     default Set<String> getTags() {
         final Set<String> names = new HashSet<>(2);
