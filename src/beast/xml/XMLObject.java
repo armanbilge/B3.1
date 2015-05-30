@@ -38,7 +38,7 @@ import java.util.stream.Stream;
  * @author Alexei Drummond
  * @author Arman Bilge
  */
-public final class XMLObject implements Identifiable {
+public final class XMLObject implements XMLObjectChild, Identifiable {
 
     private static final long serialVersionUID = 1;
 
@@ -223,9 +223,8 @@ public final class XMLObject implements Identifiable {
         else
             return obj;
 
-        final Optional<Identifiable> no = xo.getNativeObject();
-        if (no.isPresent())
-            return no.get();
+        if (xo.hasNativeObject())
+            return xo.getNativeObject().get();
         else
             return xo;
     }
@@ -246,24 +245,16 @@ public final class XMLObject implements Identifiable {
         return getXMLObjectChildren().anyMatch(xo -> xo.getName().equals(name));
     }
 
-    public void addChild(final XMLObject xo) {
+    public void addChild(final XMLObjectChild xo) {
         children.add(xo);
-    }
-
-    public void addChild(final Reference ref) {
-        children.add(ref);
     }
 
     public void addChild(final String str) {
         children.add(str);
     }
 
-    public void removeChild(final XMLObject xo) {
+    public void removeChild(final XMLObjectChild xo) {
         children.remove(xo);
-    }
-
-    public void removeChild(final Reference ref) {
-        children.remove(ref);
     }
 
     public void removeChild(final String str) {
@@ -271,7 +262,7 @@ public final class XMLObject implements Identifiable {
     }
 
     public boolean getBooleanChild(final int i) throws XMLParseException {
-        return XMLObject.getBoolean(getChild(i).toString());
+        return getBoolean(getChild(i).toString());
     }
 
     public void addChild(final boolean child) {

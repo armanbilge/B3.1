@@ -1,5 +1,5 @@
 /*
- * Reference.java
+ * ObjectNotFoundException.java
  *
  * BEAST: Bayesian Evolutionary Analysis by Sampling Trees
  * Copyright (C) 2015 BEAST Developers
@@ -20,17 +20,11 @@
 
 package beast.xml;
 
-public final class Reference implements XMLObjectChild {
+public class ObjectNotFoundException extends Exception {
 
-    private final XMLObject referencedObject;
+    private static final long serialVersionUID = 1;
 
-    public Reference(final XMLObject referencedObject) {
-        this.referencedObject = referencedObject;
-    }
-
-    public XMLObject getReferencedObject() { return referencedObject; }
-
-    public String toString() {
-        return "@" + referencedObject.getId();
+    public ObjectNotFoundException(final String id) {
+        super("Object with id=" + id + " not found in ObjectStore.");
     }
 }

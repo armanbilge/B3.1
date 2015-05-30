@@ -1,5 +1,5 @@
 /*
- * Reference.java
+ * Spawnable.java
  *
  * BEAST: Bayesian Evolutionary Analysis by Sampling Trees
  * Copyright (C) 2015 BEAST Developers
@@ -20,17 +20,8 @@
 
 package beast.xml;
 
-public final class Reference implements XMLObjectChild {
-
-    private final XMLObject referencedObject;
-
-    public Reference(final XMLObject referencedObject) {
-        this.referencedObject = referencedObject;
-    }
-
-    public XMLObject getReferencedObject() { return referencedObject; }
-
-    public String toString() {
-        return "@" + referencedObject.getId();
-    }
+/**
+ * @author Alexei Drummond
+ */
+public interface Spawnable extends Runnable {
 }

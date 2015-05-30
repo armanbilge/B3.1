@@ -1,5 +1,5 @@
 /*
- * Reference.java
+ * XMLChild.java
  *
  * BEAST: Bayesian Evolutionary Analysis by Sampling Trees
  * Copyright (C) 2015 BEAST Developers
@@ -20,17 +20,9 @@
 
 package beast.xml;
 
-public final class Reference implements XMLObjectChild {
-
-    private final XMLObject referencedObject;
-
-    public Reference(final XMLObject referencedObject) {
-        this.referencedObject = referencedObject;
-    }
-
-    public XMLObject getReferencedObject() { return referencedObject; }
-
-    public String toString() {
-        return "@" + referencedObject.getId();
-    }
+/**
+ * Marker interface to unify XMLObject and Reference.
+ * @author Arman Bilge
+ */
+interface XMLObjectChild {
 }
