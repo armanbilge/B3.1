@@ -50,16 +50,16 @@ interface XMLSyntaxRule {
      * Check for possible elements: catch typos, old syntax and elements with identical names to global
      * xml element parsers.
      *
-     * @param tag
-     * @return true if rule allows a element with that tag
+     * @param name
+     * @return true if rule allows a element with that name
      */
-    boolean isLegalElementName(String tag);
+    boolean isLegalElementName(String name);
 
     /**
-     * @param tag
-     * @return true if rule allows a sub-element with that tag
+     * @param name
+     * @return true if rule allows a sub-element with that name
      */
-    boolean isLegalSubelementName(String tag);
+    boolean isLegalSubelementName(String name);
 
     /**
      * @param c class type
