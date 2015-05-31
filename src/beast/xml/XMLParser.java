@@ -109,8 +109,6 @@ public class XMLParser {
             if (event.isStartElement()) {
 
                 final StartElement startElement = event.asStartElement();
-                final Attribute idrefAttribute = startElement.getAttributeByName(new QName(Identifiable.IDREF));
-
                 final String idref = Optional.ofNullable(startElement.getAttributeByName(new QName(Identifiable.IDREF)))
                         .map(Attribute::getValue).orElse(null);
 
