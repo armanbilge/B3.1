@@ -25,6 +25,10 @@ package beast.xml;
  */
 public final class AndRule extends CompoundRule {
 
+    public static XMLSyntaxRule newAndRule(final XMLSyntaxRule... rules) {
+        return newAndRule(false, rules);
+    }
+
     public static XMLSyntaxRule newAndRule(final boolean optional, final XMLSyntaxRule... rules) {
         return OptionalRule.newOptionalRule(new AndRule(rules), optional);
     }
