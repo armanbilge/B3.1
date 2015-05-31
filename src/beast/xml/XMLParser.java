@@ -94,11 +94,10 @@ public class XMLParser {
         return Collections.unmodifiableCollection(parsers.values());
     }
 
-    public ObjectStore parse(final Reader reader, boolean run) throws XMLStreamException, XMLParseException {
+    public XMLObject parse(final Reader reader, boolean run) throws XMLStreamException, XMLParseException {
         final XMLEventReader eventReader = FACTORY.createXMLEventReader(reader);
         eventReader.nextEvent();
-        traverse(eventReader, run, true);
-        return store;
+        return (XMLObject) traverse(eventReader, run, true);
     }
 
     private XMLObjectChild traverse(final XMLEventReader reader, final boolean run, final boolean parse) throws XMLStreamException, XMLParseException {
