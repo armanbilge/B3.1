@@ -181,7 +181,7 @@ public class XMLParser {
                     final EndElement endElement = reader.nextEvent().asEndElement();
                     if (!endElement.getName().equals(startElement.getName()))
                         throw new XMLParseException("Element <" + startElement.getName()
-                                + "> ends with non-matching tag <" + endElement.getName() + ">.");
+                                + "> ends with non-matching tag </" + endElement.getName() + ">.");
 
                     final String id = Optional.ofNullable(startElement.getAttributeByName(new QName(Identifiable.ID)))
                             .map(Attribute::getValue).orElse(null);
