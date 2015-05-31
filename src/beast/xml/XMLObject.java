@@ -330,7 +330,7 @@ public final class XMLObject implements XMLObjectChild, Identifiable {
     }
 
     public void removeChild(final double[] child) {
-        removeChild(child);
+        removeChild(getString(child));
     }
 
     public String getStringChild(final int i) throws XMLParseException {
