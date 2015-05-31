@@ -1,5 +1,5 @@
 /*
- * XMLSyntaxRule.java
+ * OptionalRule.java
  *
  * BEAST: Bayesian Evolutionary Analysis by Sampling Trees
  * Copyright (C) 2015 BEAST Developers
@@ -22,15 +22,33 @@ package beast.xml;
 
 import java.util.Set;
 
-interface XMLSyntaxRule {
+/**
+ * @author Arman Bilge
+ */
+final class OptionalRule implements XMLSyntaxRule {
+
+    private final XMLSyntaxRule rule;
+
+    public static XMLSyntaxRule newOptionalRule(final XMLSyntaxRule rule, final boolean optional) {
+        return optional ? new OptionalRule(rule) : rule;
+    }
+
+    private OptionalRule(final XMLSyntaxRule rule) {
+        this.rule = rule;
+    }
+
+    public XMLSyntaxRule getRule() {
+        return rule;
+    }
 
     /**
      * Returns true if the rule is satisfied for the given XML object.
+     *
+     * @param object
      */
-    boolean isSatisfied(XMLObject object);
-
-    default boolean isAttributeRule() {
-        return false;
+    @Override
+    public boolean isSatisfied(final XMLObject object) {
+        return true;
     }
 
     /**
@@ -39,12 +57,18 @@ interface XMLSyntaxRule {
      * @param name attribute name
      * @return true if contains attribute
      */
-    boolean containsAttribute(String name);
+    @Override
+    public boolean containsAttribute(final String name) {
+        return rule.containsAttribute(name);
+    }
 
     /**
      * @return the classes potentially required by this rule.
      */
-    Set<Class<?>> getRequiredTypes();
+    @Override
+    public Set<Class<?>> getRequiredTypes() {
+        return rule.getRequiredTypes();
+    }
 
     /**
      * Check for possible elements: catch typos, old syntax and elements with identical names to global
@@ -53,23 +77,34 @@ interface XMLSyntaxRule {
      * @param tag
      * @return true if rule allows a element with that tag
      */
-    boolean isLegalElementName(String tag);
+    @Override
+    public boolean isLegalElementName(final String tag) {
+        return rule.isLegalElementName(tag);
+    }
 
     /**
      * @param tag
      * @return true if rule allows a sub-element with that tag
      */
-    boolean isLegalSubelementName(String tag);
+    @Override
+    public boolean isLegalSubelementName(final String tag) {
+        return rule.isLegalSubelementName(tag);
+    }
 
     /**
      * @param c class type
      * @return true if rule accepts an element which, after parsing, is represented as a class of type 'c'
      */
-    boolean isLegalElementClass(Class<?> c);
+    @Override
+    public boolean isLegalElementClass(final Class<?> c) {
+        return rule.isLegalElementClass(c);
+    }
 
     /**
      * Describes the rule in general.
      */
-    String ruleString();
-
+    @Override
+    public String ruleString() {
+        return "Optionally, " + rule.ruleString();
+    }
 }

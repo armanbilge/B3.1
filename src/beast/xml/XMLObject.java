@@ -206,7 +206,7 @@ public final class XMLObject implements XMLObjectChild, Identifiable {
         return children.stream().map(XMLObject::processChild);
     }
 
-    private Stream<XMLObject> getXMLObjectChildren() {
+    public Stream<XMLObject> getXMLObjectChildren() {
         return getChildren().filter(c -> c instanceof XMLObject).map(xo -> (XMLObject) xo);
     }
 
