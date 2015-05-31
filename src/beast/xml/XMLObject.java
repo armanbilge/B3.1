@@ -71,6 +71,10 @@ public final class XMLObject implements XMLObjectChild, Identifiable {
         return Collections.unmodifiableSet(attributes.keySet());
     }
 
+    public Map<String,String> getAttributes() {
+        return Collections.unmodifiableMap(attributes);
+    }
+
     public boolean hasAttribute(final String name) {
         return attributes.containsKey(name);
     }
@@ -202,12 +206,16 @@ public final class XMLObject implements XMLObjectChild, Identifiable {
         setAttribute(name, getString(value));
     }
 
-    public Stream<Object> getChildren() {
+    public Stream<Object> getProcessedChildren() {
         return children.stream().map(XMLObject::processChild);
     }
 
     public Stream<XMLObject> getXMLObjectChildren() {
-        return getChildren().filter(c -> c instanceof XMLObject).map(xo -> (XMLObject) xo);
+        return getProcessedChildren().filter(c -> c instanceof XMLObject).map(xo -> (XMLObject) xo);
+    }
+
+    public List<Object> getChildren() {
+        return Collections.unmodifiableList(children);
     }
 
     public int getChildCount() {
@@ -234,7 +242,7 @@ public final class XMLObject implements XMLObjectChild, Identifiable {
     }
 
     public <T extends Identifiable> Optional<T> getChild(final Class<T> c) {
-        return getChildren().filter(c::isInstance).map(c::cast).findFirst();
+        return getProcessedChildren().filter(c::isInstance).map(c::cast).findFirst();
     }
 
     public Optional<XMLObject> getChild(final String name) {

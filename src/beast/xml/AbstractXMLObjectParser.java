@@ -53,7 +53,7 @@ public abstract class AbstractXMLObjectParser<T extends Identifiable> implements
 //                LOGGER.warning(msg);
 //        }
 //
-//        for (Object child : (Iterable<Object>) xo.getChildren()::iterator) {
+//        for (Object child : (Iterable<Object>) xo.getProcessedChildren()::iterator) {
 //            if (child instanceof XMLObject) {
 //
 //        }

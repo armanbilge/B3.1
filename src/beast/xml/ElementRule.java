@@ -88,7 +88,7 @@ public abstract class ElementRule implements XMLSyntaxRule {
 
         @Override
         public boolean isSatisfied(final XMLObject xo) {
-            final long count = xo.getChildren().filter(c::isInstance).count();
+            final long count = xo.getProcessedChildren().filter(c::isInstance).count();
             return getMin() <= count && count <= getMax();
         }
 

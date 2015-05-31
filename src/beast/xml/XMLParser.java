@@ -97,10 +97,10 @@ public class XMLParser {
     public XMLObject parse(final Reader reader, boolean run) throws XMLStreamException, XMLParseException {
         final XMLEventReader eventReader = FACTORY.createXMLEventReader(reader);
         eventReader.nextEvent();
-        return (XMLObject) traverse(eventReader, run, true);
+        return (XMLObject) parse(eventReader, run, true);
     }
 
-    private XMLObjectChild traverse(final XMLEventReader reader, final boolean run, final boolean parse) throws XMLStreamException, XMLParseException {
+    private XMLObjectChild parse(final XMLEventReader reader, final boolean run, final boolean process) throws XMLStreamException, XMLParseException {
 
         if (reader.hasNext()) {
 
@@ -148,7 +148,7 @@ public class XMLParser {
 
                     final XMLObject xo = new XMLObject(startElement.getName().toString());
                     final XMLObjectParser<?> parser;
-                    if (parse)
+                    if (process)
                         parser = getParser(xo.getName()).orElseThrow(
                             () -> new XMLParseException("No parser for name " + xo.getName() + ".")
                         );
@@ -163,7 +163,7 @@ public class XMLParser {
                             if (verbose) LOGGER.info("Parsing " + name);
 
                             // Don't parse elements that may be legal here with global parsers
-                            XMLObjectChild xoc = traverse(reader, run, parser == null || !parser.getSyntaxRule().isLegalElementName(name));
+                            XMLObjectChild xoc = parse(reader, run, parser == null || !parser.getSyntaxRule().isLegalElementName(name));
                             xo.addChild(xoc);
 
                         } else if (nextEvent.isCharacters()) {
