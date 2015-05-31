@@ -36,44 +36,60 @@ public abstract class ElementRule implements XMLSyntaxRule {
     private final int min;
     private final int max;
 
-    public static ElementRule createElementRule(final Class<?> type) {
-        return createElementRule(type, false);
+    public static ElementRule newElementRule(final Class<?> type) {
+        return newElementRule(type, false);
     }
 
-    public static ElementRule createElementRule(final Class<?> type, final boolean optional) {
-        return createElementRule(type, optional, null);
+    public static ElementRule newElementRule(final Class<?> type, final boolean optional) {
+        return newElementRule(type, optional, null);
     }
 
-    public static ElementRule createElementRule(final Class<?> type, final boolean optional, final String description) {
-        return createElementRule(type, optional ? 0 : 1, 1, description);
+    public static ElementRule newElementRule(final Class<?> type, final boolean optional, final String description) {
+        return newElementRule(type, optional ? 0 : 1, 1, description);
     }
 
-    public static ElementRule createElementRule(final Class<?> type, final int min, final int max) {
-        return createElementRule(type, min, max, null);
+    public static ElementRule newElementRule(final Class<?> type, final int min, final int max) {
+        return newElementRule(type, min, max, null);
     }
 
-    public static ElementRule createElementRule(final Class<?> type, final int min, final int max, final String description) {
+    public static ElementRule newElementRule(final Class<?> type, final int min, final int max, final String description) {
         return new ClassElementRule<>(type, min, max, description);
     }
 
-    public static ElementRule createElementRule(final String name, final XMLSyntaxRule rule) {
-        return createElementRule(name, rule, false);
+    public static ElementRule newElementRule(final String name, final XMLSyntaxRule rule) {
+        return newElementRule(name, rule, false);
     }
 
-    public static ElementRule createElementRule(final String name, final XMLSyntaxRule rule, final boolean optional) {
-        return createElementRule(name, rule, optional, null);
+    public static ElementRule newElementRule(final String name, final XMLSyntaxRule rule, final boolean optional) {
+        return newElementRule(name, rule, optional, null);
     }
 
-    public static ElementRule createElementRule(final String name, final XMLSyntaxRule rule, final boolean optional, final String description) {
-        return createElementRule(name, rule, optional ? 0 : 1, 1, description);
+    public static ElementRule newElementRule(final String name, final XMLSyntaxRule rule, final boolean optional, final String description) {
+        return newElementRule(name, rule, optional ? 0 : 1, 1, description);
     }
 
-    public static ElementRule createElementRule(final String name, final XMLSyntaxRule rule, final int min, final int max) {
-        return createElementRule(name, rule, min, max, null);
+    public static ElementRule newElementRule(final String name, final XMLSyntaxRule rule, final int min, final int max) {
+        return newElementRule(name, rule, min, max, null);
     }
 
-    public static ElementRule createElementRule(final String name, final XMLSyntaxRule rule, final int min, final int max, final String description) {
+    public static ElementRule newElementRule(final String name, final XMLSyntaxRule rule, final int min, final int max, final String description) {
         return new XMLElementRule(name, rule, min, max, description);
+    }
+
+    public static ElementRule newElementRule(final String name, final Class<?> type, final boolean optional) {
+        return newElementRule(name, type, optional, null);
+    }
+
+    public static ElementRule newElementRule(final String name, final Class<?> type, final boolean optional, final String description) {
+        return newElementRule(name, type, optional ? 0 : 1, 1, description);
+    }
+
+    public static ElementRule newElementRule(final String name, final Class<?> type, final int min, final int max) {
+        return newElementRule(name, type, min, max, null);
+    }
+
+    public static ElementRule newElementRule(final String name, final Class<?> type, final int min, final int max, final String description) {
+        return ElementRule.newElementRule(name, ElementRule.newElementRule(type, min, max), min == 0, description);
     }
 
     public static final class ClassElementRule<T> extends ElementRule {
