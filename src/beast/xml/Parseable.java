@@ -33,4 +33,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.CONSTRUCTOR)
 public @interface Parseable {
+
+    String[] synonyms() default {};
+    String description() default "";
+
 }
