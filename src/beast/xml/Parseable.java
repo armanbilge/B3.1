@@ -34,6 +34,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.CONSTRUCTOR)
 public @interface Parseable {
 
+    boolean className() default true;
     String[] synonyms() default {};
     String description() default "";
 

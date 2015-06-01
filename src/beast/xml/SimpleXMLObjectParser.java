@@ -60,9 +60,15 @@ public final class SimpleXMLObjectParser<T extends Identifiable> extends Abstrac
         parsedType = constructor.getDeclaringClass();
         final Parseable annotation = constructor.getAnnotation(Parseable.class);
 
-        name = camelCase(parsedType.getSimpleName());
-        description = annotation.description();
         synonyms = annotation.synonyms();
+        description = annotation.description();
+        if (annotation.className()) {
+            name = camelCase(parsedType.getSimpleName());
+        } else {
+            if (synonyms.length < 1)
+                throw new ParserCreationException(constructor, "If not using class name then must have at least one synonym.");
+            name = synonyms[0];
+        }
 
         components = new AnnotationXMLObjectParser[constructor.getParameterCount()];
         final XMLSyntaxRule[] constructorRules = new XMLSyntaxRule[components.length];
