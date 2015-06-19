@@ -42,6 +42,8 @@ import java.util.concurrent.Executors;
  */
 public final class CompoundLikelihood extends Likelihood {
 
+    private static final String LIKELIHOODS = "likelihoods";
+
     private final int threadCount;
     private final boolean unroll;
 
@@ -84,14 +86,14 @@ public final class CompoundLikelihood extends Likelihood {
     @Parseable(synonyms = {"likelihood", "prior"},
             description = "A likelihood function which is simply the product of a set of likelihood functions.")
     public CompoundLikelihood(@IntegerAttribute(name = "threads", optional = true, defaultValue = -1) final int threads,
-                              @ObjectArrayElement(name = "likelihoods") final Likelihood... likelihoods) {
+                              @ObjectArrayElement(name = LIKELIHOODS) final Likelihood... likelihoods) {
         this(true, threads, likelihoods);
     }
 
     @Parseable(className = false,
             synonyms = {"posterior"},
             description = "The posterior is the product of the likelihood and the prior.")
-    public CompoundLikelihood(@ObjectArrayElement(name = "likelihoods") final Likelihood... likelihoods) {
+    public CompoundLikelihood(@ObjectArrayElement(name = LIKELIHOODS) final Likelihood... likelihoods) {
         this(false, 0, likelihoods);
     }
 
