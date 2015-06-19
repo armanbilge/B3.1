@@ -57,6 +57,10 @@ public abstract class Variable<V> implements Identifiable, Loggable {
         this.id = id;
     }
 
+    public final String getName() {
+        return name;
+    }
+
     public abstract V getValue(int index);
 
     public abstract void setValue(int index, V value);
