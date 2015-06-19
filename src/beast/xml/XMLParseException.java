@@ -27,10 +27,7 @@ package beast.xml;
  */
 public class XMLParseException extends Exception {
 
-    private static final long serialVersionUID = -967847837310566911L;
-
-    public XMLParseException() {
-    }
+    private static final long serialVersionUID = 1;
 
     public XMLParseException(final String message) {
         super(message);
