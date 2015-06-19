@@ -45,7 +45,9 @@ public abstract class Variable<V> implements Identifiable, Loggable {
     /**
      * @return the name of this variable.
      */
-    public abstract String getVariableName();
+    public final String getVariableName() {
+        return name;
+    }
 
     @Override
     public final String getId() {
@@ -55,10 +57,6 @@ public abstract class Variable<V> implements Identifiable, Loggable {
     @Override
     public final void setId(final String id) {
         this.id = id;
-    }
-
-    public final String getName() {
-        return name;
     }
 
     public abstract V getValue(int index);
