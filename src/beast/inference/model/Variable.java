@@ -66,9 +66,9 @@ public abstract class Variable<V> implements Identifiable, Loggable {
     public abstract V[] getValues();
 
     /**
-     * @return the size of this variable - i.e. the length of the vector
+     * @return the dimension of this variable - i.e. the length of the vector
      */
-    public abstract int getSize();
+    public abstract int getDimension();
 
     /**
      * adds a parameter listener that is notified when this parameter changes.
