@@ -117,7 +117,8 @@ public abstract class Likelihood implements Identifiable, Loggable, ModelChangeL
 	/**
 	 * Forces a complete recalculation of the likelihood next time getLikelihood is called
 	 */
-	public void makeLikelihoodDirty() {
+	public final void makeLikelihoodDirty() {
+        setLikelihoodUnknown();
         makeDirty();
     }
 
