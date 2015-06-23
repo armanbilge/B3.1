@@ -104,7 +104,7 @@ public final class RealVariable extends Variable<Double> {
         this.bounds.addBounds(bounds);
     }
 
-    private final class RealBounds implements Bounds<Double> {
+    public final class RealBounds implements Bounds<Double> {
 
         final double lower;
         final double upper;
