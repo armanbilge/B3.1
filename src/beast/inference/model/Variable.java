@@ -20,11 +20,15 @@
 
 package beast.inference.model;
 
+import beast.inference.logging.LogColumn;
 import beast.inference.logging.Loggable;
 import beast.xml.Identifiable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.IntFunction;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * A generic random variable.
@@ -61,9 +65,32 @@ public abstract class Variable<V> implements Identifiable, Loggable {
 
     public abstract V getValue(int index);
 
-    public abstract void setValue(int index, V value);
+    public final void setValue(final int index, final V value) {
+        setVariableValue(index, value);
+        fireVariableChanged(index);
+    }
 
-    public abstract V[] getValues();
+    @SafeVarargs
+    public final void setValues(final V... values) {
+        setVariableValues(values);
+        fireVariableChanged();
+    }
+
+    public final void fill(final V value) {
+        setAll(i -> value);
+        fireVariableChanged();
+    }
+
+    public final void setAll(final IntFunction<V> generator) {
+        IntStream.range(0, getDimension())
+                .forEach(i -> setVariableValue(i, generator.apply(i)));
+    }
+
+    protected abstract void setVariableValue(int index, V value);
+
+    protected abstract void setVariableValues(V... values);
+
+    public abstract Stream<V> getValues();
 
     /**
      * @return the dimension of this variable - i.e. the length of the vector
@@ -89,11 +116,11 @@ public abstract class Variable<V> implements Identifiable, Loggable {
         listeners.remove(listener);
     }
 
-    protected final void fireVariableChanged() {
+    public final void fireVariableChanged() {
         listeners.forEach(l -> l.variableChangedEvent(new ChangeEvent(ChangeType.ALL_VALUES_CHANGED, -1)));
     }
 
-    protected final void fireVariableChanged(final int index) {
+    private void fireVariableChanged(final int index) {
         listeners.forEach(l -> l.variableChangedEvent(new ChangeEvent(ChangeType.VALUE_CHANGED, index)));
     }
 
@@ -114,10 +141,30 @@ public abstract class Variable<V> implements Identifiable, Loggable {
 
     public abstract void addBounds(Bounds<V> bounds);
 
+    @Override
+    public final LogColumn[] getColumns() {
+        return IntStream.range(0, getDimension())
+                .mapToObj(VariableLogColumn::new)
+                .toArray(LogColumn[]::new);
+    }
+
+    private final class VariableLogColumn extends LogColumn {
+
+        private final int dimension;
+
+        VariableLogColumn(final int dimension) {
+            super(getVariableName() + "[" + dimension + "]");
+            this.dimension = dimension;
+        }
+
+        @Override
+        protected String getFormattedValue() {
+            return getValue(dimension).toString();
+        }
+    }
+
     public enum ChangeType {
         VALUE_CHANGED,
-        REMOVED,
-        ADDED,
         ALL_VALUES_CHANGED
     }
 

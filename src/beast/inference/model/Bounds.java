@@ -20,6 +20,10 @@
 
 package beast.inference.model;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 /**
  * Represents a multi-dimensional 'regular' boundary (a hypervolume)
  *
@@ -42,5 +46,35 @@ public interface Bounds<V> {
      * @return the dimensionality of this hypervolume.
      */
     int getBoundsDimension();
+
+    final class IntersectionBounds<V> implements Bounds<V> {
+
+        private final List<Bounds<V>> bounds = new ArrayList<>();
+        private final Comparator<V> comparator;
+
+        public IntersectionBounds(final Comparator<V> comparator, final Bounds<V> bounds) {
+            this.comparator = comparator;
+            this.bounds.add(bounds);
+        }
+
+        public void addBounds(final Bounds<V> bounds) {
+            this.bounds.add(bounds);
+        }
+
+        @Override
+        public V getUpperLimit(int dimension) {
+            return bounds.stream().map(b -> b.getUpperLimit(dimension)).min(comparator).get();
+        }
+
+        @Override
+        public V getLowerLimit(int dimension) {
+            return bounds.stream().map(b -> b.getUpperLimit(dimension)).max(comparator).get();
+        }
+
+        @Override
+        public int getBoundsDimension() {
+            return bounds.get(0).getBoundsDimension();
+        }
+    }
 
 }
