@@ -1,5 +1,5 @@
 /*
- * XMLChild.java
+ * XMLObjectChild.java
  *
  * BEAST: Bayesian Evolutionary Analysis by Sampling Trees
  * Copyright (C) 2015 BEAST Developers
