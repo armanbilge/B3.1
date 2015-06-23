@@ -58,6 +58,8 @@ public interface Bounds<V> {
         }
 
         public void addBounds(final Bounds<V> bounds) {
+            if (bounds.getBoundsDimension() != getBoundsDimension())
+                throw new IllegalArgumentException("Bounds must have same number of dimensions.");
             this.bounds.add(bounds);
         }
 
