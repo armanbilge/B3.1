@@ -21,6 +21,7 @@
 package beast.inference.distributions;
 
 import beast.inference.model.Variable;
+import beast.math.NonDifferentiableException;
 
 /**
  * uniform distribution.
@@ -48,6 +49,13 @@ public final class UniformDistribution extends Distribution {
     }
 
     @Override
+    public double differentiatePDF(final double x) {
+        if (x == getLower() || x == getUpper())
+            throw new NonDifferentiableException();
+        return 0.0;
+    }
+
+    @Override
     public double logPDF(final double x) {
         final double lower = getLower();
         final double upper = getUpper();
@@ -55,7 +63,14 @@ public final class UniformDistribution extends Distribution {
             return Double.NEGATIVE_INFINITY;
         // improve numerical stability
         return - Math.log(upper - lower);
+    }
 
+    @Override
+    public double differentiateLogPDF(final double x) {
+        if (getLower() < x && x < getUpper())
+            return 0.0;
+        else
+            throw new NonDifferentiableException();
     }
 
     @Override

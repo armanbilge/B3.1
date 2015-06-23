@@ -47,12 +47,28 @@ public abstract class Distribution extends Model {
     public abstract double pdf(double x);
 
     /**
+     * derivative of probability density function of the distribution
+     *
+     * @param x argument
+     * @return pdf value
+     */
+    public abstract double differentiatePDF(double x);
+
+    /**
      * the natural log of the probability density function of the distribution
      *
      * @param x argument
      * @return log pdf value
      */
     public abstract double logPDF(double x);
+
+    /**
+     * derivative of the natural log of the probability density function of the distribution
+     *
+     * @param x argument
+     * @return log pdf value
+     */
+    public abstract double differentiateLogPDF(double x);
 
     /**
      * cumulative density function of the distribution
