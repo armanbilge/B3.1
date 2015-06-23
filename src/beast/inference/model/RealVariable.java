@@ -20,9 +20,12 @@
 
 package beast.inference.model;
 
+import beast.inference.logging.LogColumn;
+import beast.inference.logging.NumberColumn;
 import beast.inference.model.Bounds.IntersectionBounds;
 
 import java.util.Arrays;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -34,6 +37,7 @@ public final class RealVariable extends Variable<Double> {
     private double[] values;
     private double[] storedValues;
     private final IntersectionBounds<Double> bounds;
+    private final NumberColumn[] logColumns;
 
     {
         bounds = new IntersectionBounds<>(Double::compare, new RealBounds(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
@@ -53,6 +57,9 @@ public final class RealVariable extends Variable<Double> {
         dimension = values.length;
         this.values = values;
         storedValues = new double[dimension];
+        logColumns = IntStream.range(0, getDimension())
+                .mapToObj(RealNumberColumn::new)
+                .toArray(NumberColumn[]::new);
     }
 
     @Override
@@ -129,5 +136,26 @@ public final class RealVariable extends Variable<Double> {
             return getDimension();
         }
     }
+
+    @Override
+    public LogColumn[] getColumns() {
+        return logColumns;
+    }
+
+    private final class RealNumberColumn extends NumberColumn {
+
+        private final int dimension;
+
+        RealNumberColumn(final int dimension) {
+            super(getVariableName() + "[" + dimension + "]");
+            this.dimension = dimension;
+        }
+
+        @Override
+        public double getDoubleValue() {
+            return getValue(dimension);
+        }
+    }
+
 
 }

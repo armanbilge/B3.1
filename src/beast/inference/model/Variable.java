@@ -142,7 +142,7 @@ public abstract class Variable<V> implements Identifiable, Loggable {
     public abstract void addBounds(Bounds<V> bounds);
 
     @Override
-    public final LogColumn[] getColumns() {
+    public LogColumn[] getColumns() {
         return IntStream.range(0, getDimension())
                 .mapToObj(VariableLogColumn::new)
                 .toArray(LogColumn[]::new);
