@@ -1,5 +1,12 @@
 language: java
 jdk:
   - oraclejdk8
+before_install:
+  - mkdir -p $HOME/.ant/lib/
+  - ln -s /usr/share/java/ivy.jar $HOME/.ant/lib/ivy.jar
+addons:
+  apt:
+    packages:
+    - ivy
 notifications:
   email: false
