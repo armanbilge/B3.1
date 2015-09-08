@@ -172,7 +172,7 @@ public class XMLParser {
                         } else if (nextEvent.isCharacters()) {
                             final Characters characters = reader.nextEvent().asCharacters();
                             if (!characters.isWhiteSpace())
-                                xo.addChild(characters.getData());
+                                xo.addChild(characters.getData().trim());
                         } else {
                             throw new XMLParseException("Encountered unexpected element: " + nextEvent.getClass().getName());
                         }
