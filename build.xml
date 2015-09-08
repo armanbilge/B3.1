@@ -26,6 +26,10 @@
     <property name="debug" value="true"/>
     <property name="lib" value="lib"/>
 
+    <path id="classpath">
+        <fileset dir="${lib}" includes="**/*.jar"/>
+    </path>
+
     <target name="dependencies">
         <ivy:retrieve/>
     </target>
@@ -36,6 +40,7 @@
                target="${JDK_VERSION}"
                srcdir="${src}"
                destdir="${build}"
+               classpathref="classpath"
                fork="true"
                includeantruntime="false"
                debug="${debug}">
