@@ -20,6 +20,9 @@
 
 package beast.inference.logging;
 
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 /**
  * A column in a log.
  *
@@ -27,28 +30,37 @@ package beast.inference.logging;
  * @author Alexei Drummond
  * @author Arman Bilge
  */
-public abstract class LogColumn {
+public class LogColumn<T> {
+
+    private final Function<T,String> formatter;
+    private final Supplier<T> value;
 
     private String label;
     private int minimumWidth;
 
-    public LogColumn(final String label) {
+    public LogColumn(final String label, final Supplier<T> value) {
+        this(label, T::toString, value);
+    }
+
+    public LogColumn(final String label, final Function<T,String> formatter, final Supplier<T> value) {
+        this.formatter = formatter;
+        this.value = value;
         setLabel(label);
         setMinimumWidth(1);
     }
 
+    public final String getLabel() {
+        return format(label);
+    }
+
     public final void setLabel(final String label) {
         if (label == null)
-            throw new IllegalArgumentException("Column label is null.");
+            throw new IllegalArgumentException("Column label cannot be null.");
         this.label = label;
     }
 
-    private String format(final String str) {
-        return String.format("%-" + getMinimumWidth() + "s", str);
-    }
-
-    public final String getLabel() {
-        return format(label);
+    public final int getMinimumWidth() {
+        return minimumWidth;
     }
 
     public final void setMinimumWidth(final int minimumWidth) {
@@ -57,28 +69,12 @@ public abstract class LogColumn {
         this.minimumWidth = minimumWidth;
     }
 
-    public final int getMinimumWidth() {
-        return minimumWidth;
-    }
-
     public final String getFormatted() {
-        return format(getFormattedValue());
+        return format(formatter.apply(value.get()));
     }
 
-    protected abstract String getFormattedValue();
-
-    public static class Default extends LogColumn {
-
-        private final Object object;
-
-        public Default(final String label, final Object object) {
-            super(label);
-            this.object = object;
-        }
-
-        protected String getFormattedValue() {
-            return object.toString();
-        }
+    private String format(final String str) {
+        return String.format("%-" + minimumWidth + "s", str);
     }
 
 }
