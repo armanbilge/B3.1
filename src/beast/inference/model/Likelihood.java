@@ -22,7 +22,7 @@ package beast.inference.model;
 
 import beast.inference.logging.LogColumn;
 import beast.inference.logging.Loggable;
-import beast.inference.logging.NumberColumn;
+import beast.inference.logging.RealNumberColumn;
 import beast.math.MachineAccuracy;
 import beast.xml.Identifiable;
 
@@ -177,13 +177,7 @@ public abstract class Likelihood implements Identifiable, Loggable, ModelChangeL
 
     @Override
     public final Collection<LogColumn> getColumns() {
-        return Collections.singletonList(
-                new NumberColumn(getId()) {
-                    @Override
-                    public double getDoubleValue() {
-                        return getLogLikelihood();
-                    }
-                });
+        return Collections.singletonList(new RealNumberColumn(getId(), this::getLogLikelihood));
     }
 
     @Override

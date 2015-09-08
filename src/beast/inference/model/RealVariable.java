@@ -21,7 +21,7 @@
 package beast.inference.model;
 
 import beast.inference.logging.LogColumn;
-import beast.inference.logging.NumberColumn;
+import beast.inference.logging.RealNumberColumn;
 import beast.inference.model.Bounds.IntersectionBounds;
 
 import java.util.Arrays;
@@ -63,7 +63,7 @@ public final class RealVariable extends Variable<Double> {
         storedValues = new double[dimension];
         logColumns = Collections.unmodifiableList(
                 IntStream.range(0, getDimension())
-                .mapToObj(RealNumberColumn::new)
+                .mapToObj(i -> new RealNumberColumn(getVariableName() + "[" + i + "]", () -> getValue(i)))
                 .collect(Collectors.toList()));
     }
 
@@ -146,21 +146,5 @@ public final class RealVariable extends Variable<Double> {
     public Collection<LogColumn> getColumns() {
         return logColumns;
     }
-
-    private final class RealNumberColumn extends NumberColumn {
-
-        private final int dimension;
-
-        RealNumberColumn(final int dimension) {
-            super(getVariableName() + "[" + dimension + "]");
-            this.dimension = dimension;
-        }
-
-        @Override
-        public double getDoubleValue() {
-            return getValue(dimension);
-        }
-    }
-
 
 }
