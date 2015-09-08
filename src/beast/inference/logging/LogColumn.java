@@ -67,7 +67,7 @@ public abstract class LogColumn {
 
     protected abstract String getFormattedValue();
 
-    public class Default extends LogColumn {
+    public static class Default extends LogColumn {
 
         private final Object object;
 
