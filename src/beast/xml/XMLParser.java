@@ -50,7 +50,7 @@ public class XMLParser {
     private final boolean warnings;
     private final boolean strict;
 
-    private final TreeMap<String,XMLObjectParser<?>> parsers = new TreeMap<>(String::compareToIgnoreCase);
+    private final TreeMap<QName,XMLObjectParser<?>> parsers = new TreeMap<>();
     private final ObjectStore store = new ObjectStore();
 
     public XMLParser(final boolean warnings, final boolean strict) {
@@ -75,18 +75,19 @@ public class XMLParser {
                     + ") cannot replace existing parsers.");
 
         parser.getNames().stream()
-                .filter(tag -> canReplace || !parsers.containsKey(tag))
-                .forEach(tag -> parsers.put(tag, parser));
+                .map(name -> new QName(parser.getNameSpace(), name))
+                .filter(name -> canReplace || !parsers.containsKey(name))
+                .forEach(name -> parsers.put(name, parser));
 
         return parser.getNames().stream().anyMatch(parsers::containsKey);
 
     }
 
-    protected Optional<XMLObjectParser<?>> getParser(final String tag) {
-        return Optional.ofNullable(parsers.get(tag));
+    protected Optional<XMLObjectParser<?>> getParser(final QName name) {
+        return Optional.ofNullable(parsers.get(name));
     }
 
-    protected Set<String> getParserTags() {
+    protected Set<QName> getParserTags() {
         return Collections.unmodifiableSet(parsers.keySet());
     }
 
@@ -146,10 +147,12 @@ public class XMLParser {
 
                 } else {
 
-                    final XMLObject xo = new XMLObject(startElement.getName().toString());
+                    final QName qname = startElement.getName();
+                    final XMLObject xo = new XMLObject(qname.getNamespaceURI(), qname.getLocalPart());
+
                     final XMLObjectParser<?> parser;
                     if (process)
-                        parser = getParser(xo.getName()).orElseThrow(
+                        parser = getParser(qname).orElseThrow(
                             () -> new XMLParseException("No parser for name " + xo.getName() + ".")
                         );
                     else
@@ -159,7 +162,7 @@ public class XMLParser {
                         if (nextEvent.isStartElement()) {
                             final StartElement nextStartElement = nextEvent.asStartElement();
 
-                            final String name = nextStartElement.getName().toString();
+                            final String name = nextStartElement.getName().getLocalPart();
                             if (verbose) LOGGER.info("Parsing " + name);
 
                             // Don't parse elements that may be legal here with global parsers

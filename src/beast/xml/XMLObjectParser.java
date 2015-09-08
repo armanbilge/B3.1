@@ -20,7 +20,7 @@
 
 package beast.xml;
 
-import java.util.LinkedHashSet;
+import java.util.Collections;
 import java.util.Set;
 
 public interface XMLObjectParser<T extends Identifiable> {
@@ -41,10 +41,11 @@ public interface XMLObjectParser<T extends Identifiable> {
      * @return A set of parser name synonyms (including name returned by {@link #getName() getName})
      */
     default Set<String> getNames() {
-        final Set<String> names = new LinkedHashSet<>(2);
-        names.add(getName());
-        names.add(getClass().getPackage().getName() + "." + getName());
-        return names;
+        return Collections.singleton(getName());
+    }
+
+    default String getNameSpace() {
+        return getClass().getPackage().getName();
     }
 
     /**

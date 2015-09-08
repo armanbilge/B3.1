@@ -42,13 +42,19 @@ public final class XMLObject implements XMLObjectChild, Identifiable {
 
     private static final long serialVersionUID = 1;
 
+    private final String nameSpace;
     private final String name;
     private final Map<String,String> attributes = new HashMap<>();
     private final List<Object> children = new ArrayList<>();
     private Identifiable nativeObject = null;
 
-    public XMLObject(final String name) {
+    public XMLObject(final String nameSpace, final String name) {
+        this.nameSpace = nameSpace;
         this.name = name;
+    }
+
+    public String getNameSpace() {
+        return nameSpace;
     }
 
     public String getName() {

@@ -48,7 +48,8 @@ public class XMLWriter {
         if (obj instanceof XMLObject) {
 
             final XMLObject xo = (XMLObject) obj;
-            writer.add(EVENT_FACTORY.createStartElement(new QName(xo.getName()),
+            final QName name = new QName(xo.getNameSpace(), xo.getName());
+            writer.add(EVENT_FACTORY.createStartElement(name,
                     xo.getAttributes().entrySet().stream()
                             .map(e -> EVENT_FACTORY.createAttribute(new QName(e.getKey()), e.getValue())).iterator(),
                     null));
@@ -56,15 +57,16 @@ public class XMLWriter {
             for (final Object child : xo.getChildren())
                 write(writer, child);
 
-            writer.add(EVENT_FACTORY.createEndElement(new QName(xo.getName()), null));
+            writer.add(EVENT_FACTORY.createEndElement(name, null));
 
         } else if (obj instanceof Reference) {
 
             final XMLObject xo = ((Reference) obj).getReferencedObject();
-            writer.add(EVENT_FACTORY.createStartElement(new QName(xo.getName()),
+            final QName name = new QName(xo.getNameSpace(), xo.getName());
+            writer.add(EVENT_FACTORY.createStartElement(name,
                     Stream.of(EVENT_FACTORY.createAttribute(new QName(Identifiable.IDREF), xo.getId())).iterator(),
                     null));
-            writer.add(EVENT_FACTORY.createEndElement(new QName(xo.getName()), null));
+            writer.add(EVENT_FACTORY.createEndElement(name, null));
 
         } else if (obj instanceof String) {
 
