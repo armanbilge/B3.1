@@ -25,6 +25,10 @@ import beast.inference.logging.NumberColumn;
 import beast.inference.model.Bounds.IntersectionBounds;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -37,7 +41,7 @@ public final class RealVariable extends Variable<Double> {
     private double[] values;
     private double[] storedValues;
     private final IntersectionBounds<Double> bounds;
-    private final NumberColumn[] logColumns;
+    private final List<LogColumn> logColumns;
 
     {
         bounds = new IntersectionBounds<>(Double::compare, new RealBounds(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
@@ -57,9 +61,10 @@ public final class RealVariable extends Variable<Double> {
         dimension = values.length;
         this.values = values;
         storedValues = new double[dimension];
-        logColumns = IntStream.range(0, getDimension())
+        logColumns = Collections.unmodifiableList(
+                IntStream.range(0, getDimension())
                 .mapToObj(RealNumberColumn::new)
-                .toArray(NumberColumn[]::new);
+                .collect(Collectors.toList()));
     }
 
     @Override
@@ -138,7 +143,7 @@ public final class RealVariable extends Variable<Double> {
     }
 
     @Override
-    public LogColumn[] getColumns() {
+    public Collection<LogColumn> getColumns() {
         return logColumns;
     }
 

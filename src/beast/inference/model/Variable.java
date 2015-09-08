@@ -25,8 +25,10 @@ import beast.inference.logging.Loggable;
 import beast.xml.Identifiable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.IntFunction;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -142,10 +144,10 @@ public abstract class Variable<V> implements Identifiable, Loggable {
     public abstract void addBounds(Bounds<V> bounds);
 
     @Override
-    public LogColumn[] getColumns() {
+    public Collection<LogColumn> getColumns() {
         return IntStream.range(0, getDimension())
                 .mapToObj(VariableLogColumn::new)
-                .toArray(LogColumn[]::new);
+                .collect(Collectors.toList());
     }
 
     private final class VariableLogColumn extends LogColumn {

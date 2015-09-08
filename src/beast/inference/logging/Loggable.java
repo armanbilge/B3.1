@@ -20,14 +20,17 @@
 
 package beast.inference.logging;
 
+import java.util.Collection;
+
 /**
  * An interface for an item that can be logged.
  *
  * @author Andrew Rambaut
  * @author Alexei Drummond
+ * @author Arman Bilge
  */
 public interface Loggable {
 
-    LogColumn[] getColumns();
+    Collection<LogColumn> getColumns();
 
 }

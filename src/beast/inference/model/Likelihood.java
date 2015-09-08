@@ -26,6 +26,9 @@ import beast.inference.logging.NumberColumn;
 import beast.math.MachineAccuracy;
 import beast.xml.Identifiable;
 
+import java.util.Collection;
+import java.util.Collections;
+
 /**
  * A simple abstract base class for Likelihood functions.
  *
@@ -173,15 +176,14 @@ public abstract class Likelihood implements Identifiable, Loggable, ModelChangeL
     protected abstract void restoreCalculations();
 
     @Override
-    public final LogColumn[] getColumns() {
-        return new LogColumn[] {
+    public final Collection<LogColumn> getColumns() {
+        return Collections.singletonList(
                 new NumberColumn(getId()) {
                     @Override
                     public double getDoubleValue() {
                         return getLogLikelihood();
                     }
-                }
-        };
+                });
     }
 
     @Override
