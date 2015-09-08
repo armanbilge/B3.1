@@ -18,7 +18,7 @@
   ~ License along with BEAST.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<project name="BEAST" default="compile" basedir=".">
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="BEAST" default="compile" basedir=".">
 
     <property name="JDK_VERSION" value="1.8"/>
     <property name="src" location="src"/>
@@ -26,16 +26,8 @@
     <property name="debug" value="true"/>
     <property name="lib" value="lib"/>
 
-    <condition property="lib-unavailable">
-        <not>
-            <available file="${lib}"/>
-        </not>
-    </condition>
-
-    <target name="dependencies" if="lib-unavailable">
-        <mkdir dir="${lib}"/>
-        <get src="http://search.maven.org/remotecontent?filepath=org/apache/commons/commons-math3/3.5/commons-math3-3.5.jar"
-             dest="${lib}/commons-math3.jar"/>
+    <target name="dependencies">
+        <ivy:retrieve/>
     </target>
 
     <target name="compile" depends="dependencies">
