@@ -18,7 +18,7 @@
   ~ License along with BEAST.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<project xmlns:ivy="antlib:org.apache.ivy.ant" name="BEAST" default="compile" basedir=".">
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="BEAST" default="compile">
 
     <property name="JDK_VERSION" value="1.8"/>
     <property name="src" location="src"/>
@@ -45,6 +45,5 @@
     <target name="test" depends="compile">
         <echo message="No tests to run."/>
     </target>
-
 
 </project>
