@@ -93,6 +93,11 @@ public final class SimpleXMLObjectParser<T extends Identifiable> extends Abstrac
     }
 
     @Override
+    public String getNameSpace() {
+        return getReturnType().getPackage().getName();
+    }
+
+    @Override
     public Set<String> getNames() {
         final Set<String> names = super.getNames();
         Arrays.stream(synonyms).forEach(names::add);
