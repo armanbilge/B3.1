@@ -22,12 +22,9 @@ package beast.inference.model;
 
 import beast.inference.logging.LogColumn;
 import beast.inference.logging.RealNumberColumn;
-import beast.inference.model.Bounds.IntersectionBounds;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -35,80 +32,22 @@ import java.util.stream.Stream;
 /**
  * @author Arman Bilge
  */
-public final class RealVariable extends Variable<Double> {
+public abstract class RealVariable extends Variable<Double> {
 
-    private final int dimension;
-    private double[] values;
-    private double[] storedValues;
     private final IntersectionBounds<Double> bounds;
-    private final List<LogColumn> logColumns;
-
-    {
-        bounds = new IntersectionBounds<>(Double::compare, new RealBounds(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
-    }
 
     public RealVariable(final String name, final int dimension) {
-        this(name, new double[dimension]);
-    }
-
-    public RealVariable(final String name, final int dimension, final double value) {
-        this(name, dimension);
-        fill(value);
-    }
-
-    public RealVariable(final String name, final double... values) {
-        super(name);
-        dimension = values.length;
-        this.values = values;
-        storedValues = new double[dimension];
-        logColumns = Collections.unmodifiableList(
-                IntStream.range(0, getDimension())
-                .mapToObj(Column::new)
-                .collect(Collectors.toList()));
-    }
-
-    @Override
-    public Double getValue(final int index) {
-        return values[index];
-    }
-
-    @Override
-    public void setVariableValue(final int index, final Double value) {
-        values[index] = value;
-    }
-
-    @Override
-    public void setVariableValues(final Double... values) {
-        if (values.length != getDimension())
-            throw new IllegalArgumentException("Wrong number of dimensions.");
-        Arrays.setAll(this.values, i -> values[i]);
-    }
-
-    @Override
-    public Stream<Double> getValues() {
-        return Arrays.stream(values).boxed();
-    }
-
-    @Override
-    public int getDimension() {
-        return dimension;
-    }
-
-    @Override
-    public void storeVariableValues() {
-        System.arraycopy(values, 0, storedValues, 0, dimension);
-    }
-
-    @Override
-    public void restoreVariableValues() {
-        final double[] tmp = values;
-        values = storedValues;
-        storedValues = tmp;
+        super(name, dimension);
+        bounds = new IntersectionBounds<>(getDimension(), Double::compare, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
     }
 
     @Override
     public Bounds<Double> getBounds() {
-        return null;
+        return bounds;
+    }
+
+    protected IntersectionBounds<Double> getIntersectionBounds() {
+        return bounds;
     }
 
     @Override
@@ -132,8 +71,18 @@ public final class RealVariable extends Variable<Double> {
         }
 
         @Override
+        public Stream<Double> getUpperLimits() {
+            return IntStream.range(0, getDimension()).mapToObj(i -> upper);
+        }
+
+        @Override
         public Double getLowerLimit(int dimension) {
             return lower;
+        }
+
+        @Override
+        public Stream<Double> getLowerLimits() {
+            return IntStream.range(0, getDimension()).mapToObj(i -> lower);
         }
 
         @Override
@@ -144,21 +93,24 @@ public final class RealVariable extends Variable<Double> {
 
     @Override
     public Collection<LogColumn> getColumns() {
-        return logColumns;
+        return Collections.unmodifiableList(
+                IntStream.range(0, getDimension())
+                        .mapToObj(Column::new)
+                        .collect(Collectors.toList()));
     }
 
     private class Column extends RealNumberColumn {
 
-        final int i;
+        final int dimension;
 
-        public Column(final int i) {
-            super(getVariableName() + "[" + i + "]");
-            this.i = i;
+        public Column(final int dimension) {
+            super(getVariableName() + "[" + dimension + "]");
+            this.dimension = dimension;
         }
 
         @Override
         protected Double getValue() {
-            return RealVariable.this.getValue(i);
+            return RealVariable.this.getValue(dimension);
         }
     }
 
