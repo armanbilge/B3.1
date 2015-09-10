@@ -22,8 +22,6 @@ package beast.inference.logging;
 
 import beast.math.NumberFormatter;
 
-import java.util.function.Supplier;
-
 /**
  * An interface for a numerical column in a log.
  *
@@ -31,17 +29,17 @@ import java.util.function.Supplier;
  * @author Alexei Drummond
  * @author Arman Bilge
  */
-public final class RealNumberColumn extends LogColumn<Double> {
+public abstract class RealNumberColumn extends LogColumn<Double> {
 
-    private final NumberFormatter formatter;
+    private final NumberFormatter formatter = new NumberFormatter(1);
 
-    public RealNumberColumn(final String label, final Supplier<Double> value) {
-        this(label, new NumberFormatter(1), value);
+    public RealNumberColumn(final String label) {
+        super(label);
     }
 
-    private RealNumberColumn(final String label, final NumberFormatter formatter, final Supplier<Double> value) {
-        super(label, formatter::format, value);
-        this.formatter = formatter;
+    @Override
+    protected final String formatValue(final Double value) {
+        return formatter.format(value);
     }
 
     public NumberFormatter getFormatter() {

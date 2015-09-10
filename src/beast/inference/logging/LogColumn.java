@@ -20,9 +20,6 @@
 
 package beast.inference.logging;
 
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 /**
  * A column in a log.
  *
@@ -30,27 +27,18 @@ import java.util.function.Supplier;
  * @author Alexei Drummond
  * @author Arman Bilge
  */
-public class LogColumn<T> {
-
-    private final Function<T,String> formatter;
-    private final Supplier<T> value;
+public abstract class LogColumn<V> {
 
     private String label;
     private int minimumWidth;
 
-    public LogColumn(final String label, final Supplier<T> value) {
-        this(label, T::toString, value);
-    }
-
-    public LogColumn(final String label, final Function<T,String> formatter, final Supplier<T> value) {
-        this.formatter = formatter;
-        this.value = value;
+    public LogColumn(final String label) {
         setLabel(label);
         setMinimumWidth(1);
     }
 
     public final String getLabel() {
-        return format(label);
+        return formatString(label);
     }
 
     public final void setLabel(final String label) {
@@ -70,11 +58,17 @@ public class LogColumn<T> {
     }
 
     public final String getFormatted() {
-        return format(formatter.apply(value.get()));
+        return formatString(formatValue(getValue()));
     }
 
-    private String format(final String str) {
+    private String formatString(final String str) {
         return String.format("%-" + minimumWidth + "s", str);
     }
+
+    protected String formatValue(final V value) {
+        return value.toString();
+    }
+
+    protected abstract V getValue();
 
 }

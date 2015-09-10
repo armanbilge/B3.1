@@ -177,7 +177,12 @@ public abstract class Likelihood implements Identifiable, Loggable, ModelChangeL
 
     @Override
     public final Collection<LogColumn> getColumns() {
-        return Collections.singletonList(new RealNumberColumn(getId(), this::getLogLikelihood));
+        return Collections.singletonList(new RealNumberColumn(getId()) {
+            @Override
+            protected Double getValue() {
+                return getLogLikelihood();
+            }
+        });
     }
 
     @Override

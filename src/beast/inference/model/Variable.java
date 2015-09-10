@@ -150,7 +150,7 @@ public abstract class Variable<V> implements Identifiable, Loggable {
                 .collect(Collectors.toList());
     }
 
-    private final class VariableLogColumn extends LogColumn {
+    private final class VariableLogColumn extends LogColumn<V> {
 
         private final int dimension;
 
@@ -160,8 +160,8 @@ public abstract class Variable<V> implements Identifiable, Loggable {
         }
 
         @Override
-        protected String getFormattedValue() {
-            return getValue(dimension).toString();
+        protected V getValue() {
+            return Variable.this.getValue(dimension);
         }
     }
 

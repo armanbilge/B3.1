@@ -63,7 +63,7 @@ public final class RealVariable extends Variable<Double> {
         storedValues = new double[dimension];
         logColumns = Collections.unmodifiableList(
                 IntStream.range(0, getDimension())
-                .mapToObj(i -> new RealNumberColumn(getVariableName() + "[" + i + "]", () -> getValue(i)))
+                .mapToObj(Column::new)
                 .collect(Collectors.toList()));
     }
 
@@ -145,6 +145,21 @@ public final class RealVariable extends Variable<Double> {
     @Override
     public Collection<LogColumn> getColumns() {
         return logColumns;
+    }
+
+    private class Column extends RealNumberColumn {
+
+        final int i;
+
+        public Column(final int i) {
+            super(getVariableName() + "[" + i + "]");
+            this.i = i;
+        }
+
+        @Override
+        protected Double getValue() {
+            return RealVariable.this.getValue(i);
+        }
     }
 
 }
