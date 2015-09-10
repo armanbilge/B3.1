@@ -25,6 +25,7 @@ import beast.inference.logging.Loggable;
 import beast.xml.Identifiable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.IntFunction;
@@ -42,10 +43,12 @@ public abstract class Variable<V> implements Identifiable, Loggable {
 
     private String id;
     private final String name;
+    private final int dimension;
     private final List<VariableListener> listeners = new ArrayList<>();
 
-    public Variable(final String name) {
+    public Variable(final String name, final int dimension) {
         this.name = name;
+        this.dimension = dimension;
     }
 
     /**
@@ -55,49 +58,43 @@ public abstract class Variable<V> implements Identifiable, Loggable {
         return name;
     }
 
-    @Override
-    public final String getId() {
-        return id;
-    }
-
-    @Override
-    public final void setId(final String id) {
-        this.id = id;
+    /**
+     * @return the dimension of this variable - i.e. the length of the vector
+     */
+    public final int getDimension() {
+        return dimension;
     }
 
     public abstract V getValue(int index);
+
+    public abstract Stream<V> getValues();
 
     public final void setValue(final int index, final V value) {
         setVariableValue(index, value);
         fireVariableChanged(index);
     }
 
-    @SafeVarargs
-    public final void setValues(final V... values) {
+    public final void setValues(final Stream<V> values) {
         setVariableValues(values);
         fireVariableChanged();
     }
 
+    @SafeVarargs
+    public final void setValues(final V... values) {
+        setValues(Arrays.stream(values));
+    }
+
     public final void fill(final V value) {
         setAll(i -> value);
-        fireVariableChanged();
     }
 
     public final void setAll(final IntFunction<V> generator) {
-        IntStream.range(0, getDimension())
-                .forEach(i -> setVariableValue(i, generator.apply(i)));
+        setValues(IntStream.range(0, getDimension()).mapToObj(generator));
     }
 
     protected abstract void setVariableValue(int index, V value);
 
-    protected abstract void setVariableValues(V... values);
-
-    public abstract Stream<V> getValues();
-
-    /**
-     * @return the dimension of this variable - i.e. the length of the vector
-     */
-    public abstract int getDimension();
+    protected abstract void setVariableValues(Stream<V> values);
 
     /**
      * adds a parameter listener that is notified when this parameter changes.
@@ -142,6 +139,16 @@ public abstract class Variable<V> implements Identifiable, Loggable {
     public abstract Bounds<V> getBounds();
 
     public abstract void addBounds(Bounds<V> bounds);
+
+    @Override
+    public final String getId() {
+        return id;
+    }
+
+    @Override
+    public final void setId(final String id) {
+        this.id = id;
+    }
 
     @Override
     public Collection<LogColumn> getColumns() {
