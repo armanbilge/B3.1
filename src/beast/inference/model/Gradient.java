@@ -21,9 +21,8 @@
 package beast.inference.model;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
@@ -33,8 +32,7 @@ import java.util.stream.Stream;
  */
 public final class Gradient {
 
-    private final Map<RealVariable, double[]> gradient = Collections.synchronizedMap(new HashMap<>());
-
+    private final Map<RealVariable, double[]> gradient = new ConcurrentHashMap<>();
     private final Function<RealVariable, double[]> mapping = var -> new double[var.getDimension()];
 
     public final void addDerivative(final RealVariable var, final int index, final double deriv) {
