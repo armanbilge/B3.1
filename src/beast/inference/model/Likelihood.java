@@ -53,7 +53,7 @@ public abstract class Likelihood implements Identifiable, Loggable, ModelChangeL
         model.addStoreListener(this);
     }
 
-    public Likelihood(final Model model, final Model<?>... models) {
+    public Likelihood(final Model<?> model, final Model<?>... models) {
         model.addModel(model);
         model.addModels(models);
     }
