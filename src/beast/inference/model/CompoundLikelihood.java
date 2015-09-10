@@ -59,8 +59,7 @@ public final class CompoundLikelihood extends Likelihood {
 
     public CompoundLikelihood(final boolean unroll, final int threads, final Likelihood... likelihoods) {
 
-        super(Arrays.stream(likelihoods).map(Likelihood::getModel).findFirst().get(),
-                Arrays.stream(likelihoods).map(Likelihood::getModel).skip(1).toArray(Model[]::new));
+        super(likelihoods[0].getModel(), Arrays.stream(likelihoods).map(Likelihood::getModel).skip(1).toArray(Model[]::new));
 
         this.unroll = unroll;
         Arrays.stream(likelihoods).forEach(this::addLikelihood);
