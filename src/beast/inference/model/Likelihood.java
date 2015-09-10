@@ -23,11 +23,12 @@ package beast.inference.model;
 import beast.inference.logging.LogColumn;
 import beast.inference.logging.Loggable;
 import beast.inference.logging.RealNumberColumn;
-import beast.math.MachineAccuracy;
 import beast.xml.Identifiable;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.stream.DoubleStream;
+import java.util.stream.Stream;
 
 /**
  * A simple abstract base class for Likelihood functions.
@@ -87,35 +88,13 @@ public abstract class Likelihood implements Identifiable, Loggable, ModelChangeL
         likelihoodKnown = false;
     }
 
-    public double differentiate(final Variable<Double> var, final int index) {
-        if (getModel().hasVariable(var)) { // Default to numerical differentiation
-
-            final double epsilon = MachineAccuracy.SQRT_EPSILON * Math.max(var.getValue(index), 1);
-
-            final Bounds<Double> bounds = var.getBounds();
-            final double upper = bounds.getUpperLimit(index);
-            final double lower = bounds.getLowerLimit(index);
-
-            final double x = var.getValue(index);
-
-            final double xpe = x + epsilon;
-            final double b = xpe <= upper ? xpe : upper;
-            var.setValue(index, b);
-            final double fb = getLogLikelihood();
-
-            final double xme = x - epsilon;
-            final double a = xme >= lower ? xme : lower;
-            var.setValue(index, a);
-            final double fa = getLogLikelihood();
-
-            var.setValue(index, x);
-
-            return (fb - fa) / (b - a);
-
-        } else {
-            return 0;
-        }
+    public final DoubleStream getGradient(final Stream<RealVariable> vars) {
+        final Gradient gradient = new Gradient();
+        calculateGradient(gradient, 1.0);
+        return gradient.getGradient(vars);
     }
+
+    protected abstract void calculateGradient(Gradient gradient, double chain);
 
 	/**
 	 * Forces a complete recalculation of the likelihood next time getLikelihood is called

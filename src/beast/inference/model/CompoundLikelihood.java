@@ -32,6 +32,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A likelihood function which is simply the product of a set of likelihood functions.
@@ -55,7 +56,6 @@ public final class CompoundLikelihood extends Likelihood {
     private final ArrayList<Likelihood> lateLikelihoods = new ArrayList<>();
 
     private final List<Callable<Double>> likelihoodCallers = new ArrayList<>();
-    private final List<DifferentiateCaller> differentiateCallers = new ArrayList<>();
 
     public CompoundLikelihood(final boolean unroll, final int threads, final Likelihood... likelihoods) {
 
@@ -105,8 +105,6 @@ public final class CompoundLikelihood extends Likelihood {
         } else {
             if (!likelihoods.contains(likelihood)) {
                 likelihoods.add(likelihood);
-                // No difference in late/early evaluation for differentiation
-                differentiateCallers.add(new DifferentiateCaller(likelihood));
                 if (likelihood.evaluateEarly()) {
                     earlyLikelihoods.add(likelihood);
                 } else {
@@ -140,12 +138,16 @@ public final class CompoundLikelihood extends Likelihood {
     }
 
     @Override
-    public double differentiate(final Variable<Double> var, final int index) {
+    protected void calculateGradient(final Gradient gradient, final double chain) {
         if (pool == null) { // Single threaded
-            return likelihoods.stream().mapToDouble(l -> differentiate(var, index)).sum();
+            likelihoods.forEach(l -> l.calculateGradient(gradient, chain));
         } else {
-            differentiateCallers.forEach(c -> c.respect(var, index));
-            return evaluateCallers(differentiateCallers);
+            likelihoods.forEach(l -> pool.submit(() -> l.calculateGradient(gradient, chain)));
+            try {
+                pool.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+            } catch (final InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 
@@ -192,27 +194,6 @@ public final class CompoundLikelihood extends Likelihood {
     @Override
     protected void restoreCalculations() {
         // Nothing to do
-    }
-
-    private static final class DifferentiateCaller implements Callable<Double> {
-
-        private final Likelihood likelihood;
-        private Variable var;
-        private int index;
-
-        public DifferentiateCaller(final Likelihood likelihood) {
-            this.likelihood = likelihood;
-        }
-
-        @Override
-        public Double call() {
-            return likelihood.differentiate(var, index);
-        }
-
-        public void respect(final Variable var, final int index) {
-            this.var = var;
-            this.index = index;
-        }
     }
 
 }
