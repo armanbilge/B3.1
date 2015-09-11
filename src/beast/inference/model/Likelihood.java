@@ -27,6 +27,7 @@ import beast.xml.Identifiable;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
 
@@ -126,7 +127,7 @@ public abstract class Likelihood implements Identifiable, Loggable, ModelChangeL
     }
 
     @Override
-    public final void modelChangedEvent(final Object change) {
+    public final void handleModelChanged(final Optional<Object> change) {
         setLikelihoodUnknown();
     }
 

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * An interface that describes a model of some data.
@@ -138,20 +139,20 @@ public abstract class Model<C> implements Identifiable, ModelChangeListener<Obje
      * Fires a model changed event.
      */
     protected final void fireModelChanged() {
-        changeListeners.forEach(ModelChangeListener::modelChangedEvent);
+        changeListeners.forEach(ModelChangeListener::handleModelChanged);
     }
 
     protected final void fireModelChanged(final C change) {
-        changeListeners.forEach(l -> l.modelChangedEvent(change));
+        changeListeners.forEach(l -> l.handleModelChanged(change));
     }
 
     @Override
-    public final void modelChangedEvent(final Object change) {
+    public final void handleModelChanged(final Optional<Object> change) {
         fireModelChanged();
     }
 
     @Override
-    public final void variableChangedEvent(final ChangeEvent change) {
+    public final void handleVariableChanged(final ChangeEvent change) {
         fireModelChanged();
     }
 

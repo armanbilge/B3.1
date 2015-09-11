@@ -20,11 +20,13 @@
 
 package beast.inference.model;
 
+import beast.inference.model.Variable.ChangeEvent;
+
 /**
  * @author Alexei Drummond
  * @author Arman Bilge
  */
 @FunctionalInterface
 public interface VariableListener {
-    void variableChangedEvent(Variable.ChangeEvent change);
+    void handleVariableChanged(ChangeEvent change);
 }

@@ -116,11 +116,11 @@ public abstract class Variable<V> implements Identifiable, Loggable {
     }
 
     public final void fireVariableChanged() {
-        listeners.forEach(l -> l.variableChangedEvent(new ChangeEvent(ChangeType.ALL_VALUES_CHANGED, -1)));
+        listeners.forEach(l -> l.handleVariableChanged(new ChangeEvent(ChangeType.ALL_VALUES_CHANGED, -1)));
     }
 
     private void fireVariableChanged(final int index) {
-        listeners.forEach(l -> l.variableChangedEvent(new ChangeEvent(ChangeType.VALUE_CHANGED, index)));
+        listeners.forEach(l -> l.handleVariableChanged(new ChangeEvent(ChangeType.VALUE_CHANGED, index)));
     }
 
     /**

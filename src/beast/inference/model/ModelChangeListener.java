@@ -20,6 +20,8 @@
 
 package beast.inference.model;
 
+import java.util.Optional;
+
 /**
  * An interface that provides a listener on a model.
  *
@@ -30,8 +32,12 @@ package beast.inference.model;
 @FunctionalInterface
 public interface ModelChangeListener<C> {
 
-    default void modelChangedEvent() {
-        modelChangedEvent(null);
+    default void handleModelChanged() {
+        handleModelChanged(Optional.empty());
+    }
+
+    default void handleModelChanged(final C change) {
+        handleModelChanged(Optional.of(change));
     }
 
     /**
@@ -40,6 +46,6 @@ public interface ModelChangeListener<C> {
      * of this extra information will be contingent on recognising what
      * model it was that fired the event.
      */
-    void modelChangedEvent(C change);
+    void handleModelChanged(Optional<C> change);
 
 }
