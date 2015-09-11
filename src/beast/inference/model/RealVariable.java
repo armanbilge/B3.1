@@ -78,12 +78,12 @@ public abstract class RealVariable extends Variable<Double> {
     }
 
     @Override
-    public Bounds<Double> getBounds() {
+    public final Bounds<Double> getBounds() {
         return bounds;
     }
 
     @Override
-    public void addBounds(final Bounds<Double> bounds) {
+    public final void addBounds(final Bounds<Double> bounds) {
         this.bounds.addBounds(bounds);
     }
 
