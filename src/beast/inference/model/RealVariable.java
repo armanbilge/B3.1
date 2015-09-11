@@ -45,11 +45,7 @@ public abstract class RealVariable extends Variable<Double> {
     public Bounds<Double> getBounds() {
         return bounds;
     }
-
-    protected IntersectionBounds<Double> getIntersectionBounds() {
-        return bounds;
-    }
-
+    
     @Override
     public void addBounds(final Bounds<Double> bounds) {
         this.bounds.addBounds(bounds);
