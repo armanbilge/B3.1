@@ -39,7 +39,7 @@ public abstract class RealVariable extends Variable<Double> {
 
     private final IntersectionBounds<Double> bounds;
 
-    public RealVariable(final String name, final int dimension) {
+    protected RealVariable(final String name, final int dimension) {
         super(name, dimension);
         bounds = new IntersectionBounds<>(getDimension(), Double::compare, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
     }

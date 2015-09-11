@@ -46,7 +46,7 @@ public abstract class Variable<V> implements Identifiable, Loggable {
     private final int dimension;
     private final List<VariableListener> listeners = new ArrayList<>();
 
-    public Variable(final String name, final int dimension) {
+    protected Variable(final String name, final int dimension) {
         this.name = name;
         this.dimension = dimension;
     }
