@@ -95,6 +95,8 @@ public abstract class RealVariable extends Variable<Double> {
         public RealBounds(final double[] lower, final double[] upper) {
             if (lower.length != getDimension() || upper.length != getDimension())
                 throw new IllegalArgumentException("Wrong number of dimensions.");
+            if (IntStream.range(0, getDimension()).anyMatch(i -> upper[i] < lower[i]))
+                throw new IllegalArgumentException("Upper bound must be greater than or equal to lower bound.");
             this.lower = lower;
             this.upper = upper;
         }
