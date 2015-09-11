@@ -20,7 +20,7 @@
 
 package beast.inference.distributions;
 
-import beast.inference.model.Variable;
+import beast.inference.model.RealVariable;
 import beast.math.NonDifferentiableException;
 
 /**
@@ -32,10 +32,10 @@ import beast.math.NonDifferentiableException;
  */
 public final class UniformDistribution extends Distribution {
 
-    private final Variable<Double> lower;
-    private final Variable<Double> upper;
+    private final RealVariable lower;
+    private final RealVariable upper;
 
-    public UniformDistribution(final Variable<Double> lower, final Variable<Double> upper) {
+    public UniformDistribution(final RealVariable lower, final RealVariable upper) {
         super("UniformDistribution");
         this.lower = lower;
         this.upper = upper;
@@ -118,6 +118,11 @@ public final class UniformDistribution extends Distribution {
 
     public double getUpper() {
         return upper.getValue(0);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "(" + getLower() + ", " + getUpper() + ")";
     }
 
 }
