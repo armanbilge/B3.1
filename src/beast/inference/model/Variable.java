@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -39,7 +40,7 @@ import java.util.stream.Stream;
  * @author Alexei Drummond
  * @author Arman Bilge
  */
-public abstract class Variable<V> implements Identifiable, Loggable {
+public abstract class Variable<V extends Comparable<V>> implements Identifiable, Loggable {
 
     private String id;
     private final String name;
@@ -70,12 +71,22 @@ public abstract class Variable<V> implements Identifiable, Loggable {
     public abstract Stream<V> getValues();
 
     public final void setValue(final int index, final V value) {
+        if (!getBounds().inBounds(index, value))
+            throw new IllegalArgumentException("Value is out-of-bounds.");
         setVariableValue(index, value);
         fireVariableChanged(index);
     }
 
     public final void setValues(final Stream<V> values) {
-        setVariableValues(values);
+
+        final AtomicInteger i = new AtomicInteger();
+        final Bounds<V> bounds = getBounds();
+        final Stream<V> boundedValues = values.peek(v -> {
+            if (!bounds.inBounds(i.getAndIncrement(), v))
+                throw new IllegalArgumentException("Value is out-of-bounds.");
+        });
+
+        setVariableValues(boundedValues);
         fireVariableChanged();
     }
 

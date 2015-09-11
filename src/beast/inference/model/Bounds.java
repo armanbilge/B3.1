@@ -28,7 +28,7 @@ import java.util.stream.Stream;
  * @author Alexei Drummond
  * @author Arman Bilge
  */
-public interface Bounds<V> {
+public interface Bounds<V extends Comparable<V>> {
 
     /**
      * @return the upper limit of this hypervolume in the given dimension.
@@ -48,5 +48,11 @@ public interface Bounds<V> {
      * @return the dimensionality of this hypervolume.
      */
     int getDimension();
+
+    default boolean inBounds(final int dimension, final V value) {
+        final V lower = getLowerLimit(dimension);
+        final V upper = getUpperLimit(dimension);
+        return value.compareTo(lower) > -1 && value.compareTo(upper) < 1;
+    }
 
 }
