@@ -26,6 +26,7 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 /**
  * The world's most intelligent number formatter with the following features :-)
@@ -69,8 +70,8 @@ public final class NumberFormatter implements Serializable {
         this.sf = sf;
 
         upperCutoff = ArithmeticUtils.pow(10, sf - 1);
-        cutoffTable = IntStream.rangeClosed(1, sf)
-                .mapToLong(i -> ArithmeticUtils.pow(10L, i))
+        cutoffTable = LongStream.iterate(1, l -> 10 * l)
+                .limit(sf)
                 .asDoubleStream()
                 .toArray();
 
