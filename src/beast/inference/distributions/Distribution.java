@@ -130,5 +130,9 @@ public abstract class Distribution extends Model {
         // Nothing to do
     }
 
+    @Override
+    public String toString() {
+        return getName() + "[" + getId() + "]";
+    }
 
 }
