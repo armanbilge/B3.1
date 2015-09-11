@@ -23,9 +23,12 @@ package beast.inference.model;
 import beast.inference.logging.LogColumn;
 import beast.inference.logging.RealNumberColumn;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.IntToDoubleFunction;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -39,6 +42,39 @@ public abstract class RealVariable extends Variable<Double> {
     public RealVariable(final String name, final int dimension) {
         super(name, dimension);
         bounds = new IntersectionBounds<>(getDimension(), Double::compare, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+    }
+
+    public Double getValue(final int index) {
+        return getDoubleValue(index);
+    }
+
+    public abstract double getDoubleValue(int index);
+
+    @Override
+    public Stream<Double> getValues() {
+        return getDoubleValues().boxed();
+    }
+
+    public abstract DoubleStream getDoubleValues();
+
+    public final void setValue(final int index, final double value) {
+        super.setValue(index, value);
+    }
+
+    public final void setValues(final DoubleStream values) {
+        setValues(values.boxed());
+    }
+
+    public final void setValues(final double... values) {
+        setValues(Arrays.stream(values));
+    }
+
+    public final void fill(final double value) {
+        setAll((IntToDoubleFunction) i -> value);
+    }
+
+    public final void setAll(final IntToDoubleFunction generator) {
+        setValues(IntStream.range(0, getDimension()).mapToDouble(generator));
     }
 
     @Override
