@@ -95,9 +95,9 @@ public abstract class RealVariable extends Variable<Double> {
                         .collect(Collectors.toList()));
     }
 
-    private class Column extends RealNumberColumn {
+    private final class Column extends RealNumberColumn {
 
-        final int dimension;
+        private final int dimension;
 
         public Column(final int dimension) {
             super(getName() + "[" + dimension + "]");
