@@ -45,7 +45,7 @@ public abstract class RealVariable extends Variable<Double> {
     public Bounds<Double> getBounds() {
         return bounds;
     }
-    
+
     @Override
     public void addBounds(final Bounds<Double> bounds) {
         this.bounds.addBounds(bounds);
@@ -68,7 +68,7 @@ public abstract class RealVariable extends Variable<Double> {
 
         @Override
         public Stream<Double> getUpperLimits() {
-            return IntStream.range(0, getDimension()).mapToObj(i -> upper);
+            return IntStream.range(0, this.getDimension()).mapToObj(i -> upper);
         }
 
         @Override
@@ -78,12 +78,12 @@ public abstract class RealVariable extends Variable<Double> {
 
         @Override
         public Stream<Double> getLowerLimits() {
-            return IntStream.range(0, getDimension()).mapToObj(i -> lower);
+            return IntStream.range(0, this.getDimension()).mapToObj(i -> lower);
         }
 
         @Override
-        public int getBoundsDimension() {
-            return getDimension();
+        public int getDimension() {
+            return RealVariable.this.getDimension();
         }
     }
 
@@ -100,7 +100,7 @@ public abstract class RealVariable extends Variable<Double> {
         final int dimension;
 
         public Column(final int dimension) {
-            super(getVariableName() + "[" + dimension + "]");
+            super(getName() + "[" + dimension + "]");
             this.dimension = dimension;
         }
 

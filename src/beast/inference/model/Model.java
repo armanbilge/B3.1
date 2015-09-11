@@ -168,7 +168,7 @@ public abstract class Model<C> implements Identifiable, ModelChangeListener<Obje
 
     public final void storeModelState() {
         models.forEach(Model::storeModelState);
-        variables.forEach(Variable::storeVariableValues);
+        variables.forEach(Variable::storeValues);
         storeState();
         storeListeners.forEach(ModelStoreListener::modelStored);
     }
@@ -180,7 +180,7 @@ public abstract class Model<C> implements Identifiable, ModelChangeListener<Obje
 
     public final void restoreModelState() {
         models.forEach(Model::restoreModelState);
-        variables.forEach(Variable::restoreVariableValues);
+        variables.forEach(Variable::restoreValues);
         restoreState();
         storeListeners.forEach(ModelStoreListener::modelRestored);
     }

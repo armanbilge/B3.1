@@ -46,7 +46,7 @@ public final class IntersectionBounds<V> implements Bounds<V> {
     }
 
     public void addBounds(final Bounds<V> bounds) {
-        if (bounds.getBoundsDimension() != getBoundsDimension())
+        if (bounds.getDimension() != getDimension())
             throw new IllegalArgumentException("Bounds must have same number of dimensions.");
         this.bounds.add(bounds);
     }
@@ -58,7 +58,7 @@ public final class IntersectionBounds<V> implements Bounds<V> {
 
     @Override
     public Stream<V> getLowerLimits() {
-        return IntStream.range(0, getBoundsDimension())
+        return IntStream.range(0, getDimension())
                 .mapToObj(this::getLowerLimit);
     }
 
@@ -69,12 +69,12 @@ public final class IntersectionBounds<V> implements Bounds<V> {
 
     @Override
     public Stream<V> getUpperLimits() {
-        return IntStream.range(0, getBoundsDimension())
+        return IntStream.range(0, getDimension())
                 .mapToObj(this::getUpperLimit);
     }
 
     @Override
-    public int getBoundsDimension() {
+    public int getDimension() {
         return dimension;
     }
 

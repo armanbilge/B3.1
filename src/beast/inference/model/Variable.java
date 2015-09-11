@@ -54,7 +54,7 @@ public abstract class Variable<V> implements Identifiable, Loggable {
     /**
      * @return the name of this variable.
      */
-    public final String getVariableName() {
+    public final String getName() {
         return name;
     }
 
@@ -111,7 +111,7 @@ public abstract class Variable<V> implements Identifiable, Loggable {
      *
      * @param listener the listener
      */
-    public final void removeVariableListener(VariableListener listener) {
+    public final void removeVariableListener(final VariableListener listener) {
         listeners.remove(listener);
     }
 
@@ -126,12 +126,12 @@ public abstract class Variable<V> implements Identifiable, Loggable {
     /**
      * stores the state of this parameter for subsequent restore
      */
-    public abstract void storeVariableValues();
+    public abstract void storeValues();
 
     /**
      * restores the stored state of this parameter
      */
-    public abstract void restoreVariableValues();
+    public abstract void restoreValues();
 
     /**
      * @return the bounds on this parameter
@@ -162,7 +162,7 @@ public abstract class Variable<V> implements Identifiable, Loggable {
         private final int dimension;
 
         VariableLogColumn(final int dimension) {
-            super(getVariableName() + "[" + dimension + "]");
+            super(getName() + "[" + dimension + "]");
             this.dimension = dimension;
         }
 

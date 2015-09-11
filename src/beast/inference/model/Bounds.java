@@ -47,6 +47,6 @@ public interface Bounds<V> {
     /**
      * @return the dimensionality of this hypervolume.
      */
-    int getBoundsDimension();
+    int getDimension();
 
 }
