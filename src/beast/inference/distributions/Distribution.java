@@ -21,6 +21,10 @@
 package beast.inference.distributions;
 
 import beast.inference.model.Model;
+import beast.math.Random;
+
+import java.util.stream.DoubleStream;
+import java.util.stream.LongStream;
 
 /**
  * an interface for a distribution.
@@ -107,6 +111,14 @@ public abstract class Distribution extends Model {
      * @return variance
      */
     public abstract double variance();
+
+    public double sample() {
+        return quantile(Random.nextDouble());
+    }
+
+    public DoubleStream sample(final long n) {
+        return LongStream.range(0, n).mapToDouble(i -> sample());
+    }
 
     @Override
     public void storeModelState() {
