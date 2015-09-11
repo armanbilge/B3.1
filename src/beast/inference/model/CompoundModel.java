@@ -20,6 +20,8 @@
 
 package beast.inference.model;
 
+import java.util.stream.Collectors;
+
 /**
  * @author Arman Bilge
  */
@@ -53,6 +55,7 @@ public final class CompoundModel extends Model<Object> {
 
     @Override
     public String toString() {
-        return getModelName() + "{" + String.join(",", (Iterable<String>) getModels().stream().map(Model::toString)::iterator) + "}";
+        return getModelName() + "{" + getModels().stream().map(Model::toString).collect(Collectors.joining(", ")) + "}";
     }
+
 }
