@@ -176,8 +176,8 @@ public final class CompoundLikelihood extends Likelihood {
     }
 
     @Override
-    protected void makeDirty() {
-        likelihoods.forEach(Likelihood::makeLikelihoodDirty);
+    protected void makeLikelihoodDirty() {
+        likelihoods.forEach(Likelihood::makeDirty);
     }
 
     @Override

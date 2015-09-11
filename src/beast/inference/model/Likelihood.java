@@ -99,12 +99,12 @@ public abstract class Likelihood implements Identifiable, Loggable, ModelChangeL
 	/**
 	 * Forces a complete recalculation of the likelihood next time getLikelihood is called
 	 */
-	public final void makeLikelihoodDirty() {
+	public final void makeDirty() {
         setLikelihoodUnknown();
-        makeDirty();
+        makeLikelihoodDirty();
     }
 
-    protected abstract void makeDirty();
+    protected abstract void makeLikelihoodDirty();
 
     /**
      * @return true if this likelihood should be evaluated early (if for example it may return a zero likelihood
@@ -129,12 +129,6 @@ public abstract class Likelihood implements Identifiable, Loggable, ModelChangeL
     public final void modelChangedEvent(final Object change) {
         setLikelihoodUnknown();
     }
-
-    @Override
-    public final void modelChangedEvent(final Variable.ChangeEvent change) {
-        setLikelihoodUnknown();
-    }
-
 
     @Override
     public final void modelStored() {
