@@ -22,14 +22,16 @@ package beast.xml;
 
 import java.util.Set;
 
-interface XMLSyntaxRule {
+public abstract class XMLSyntaxRule {
+
+    XMLSyntaxRule() {}
 
     /**
      * Returns true if the rule is satisfied for the given XML object.
      */
-    boolean isSatisfied(XMLObject object);
+    public abstract boolean isSatisfied(XMLObject object);
 
-    default boolean isAttributeRule() {
+    public boolean isAttributeRule() {
         return false;
     }
 
@@ -39,12 +41,12 @@ interface XMLSyntaxRule {
      * @param name attribute name
      * @return true if contains attribute
      */
-    boolean containsAttribute(String name);
+    public abstract boolean containsAttribute(String name);
 
     /**
      * @return the classes potentially required by this rule.
      */
-    Set<Class<?>> getRequiredTypes();
+    public abstract Set<Class<?>> getRequiredTypes();
 
     /**
      * Check for possible elements: catch typos, old syntax and elements with identical names to global
@@ -53,23 +55,23 @@ interface XMLSyntaxRule {
      * @param name
      * @return true if rule allows a element with that name
      */
-    boolean isLegalElementName(String name);
+    public abstract boolean isLegalElementName(String name);
 
     /**
      * @param name
      * @return true if rule allows a sub-element with that name
      */
-    boolean isLegalSubelementName(String name);
+    public abstract boolean isLegalSubelementName(String name);
 
     /**
      * @param c class type
      * @return true if rule accepts an element which, after parsing, is represented as a class of type 'c'
      */
-    boolean isLegalElementClass(Class<?> c);
+    public abstract boolean isLegalElementClass(Class<?> c);
 
     /**
      * Describes the rule in general.
      */
-    String ruleString();
+    public abstract String ruleString();
 
 }
