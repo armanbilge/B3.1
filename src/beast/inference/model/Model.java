@@ -53,6 +53,14 @@ public abstract class Model<C> implements Identifiable, ModelChangeListener<Obje
         this.name = name;
     }
 
+    public final String getName() {
+        return name;
+    }
+
+    public final boolean isUsed() {
+        return changeListeners.size() + storeListeners.size() > 0;
+    }
+
     /**
      * Adds a sub-model to this model. If the model is already in the
      * list then it does nothing.
@@ -77,10 +85,6 @@ public abstract class Model<C> implements Identifiable, ModelChangeListener<Obje
         return Collections.unmodifiableList(models);
     }
 
-    public final int getModelCount() {
-        return models.size();
-    }
-
     public final void addVariable(final Variable variable) {
         if (!hasVariable(variable)) {
             variables.add(variable);
@@ -95,10 +99,6 @@ public abstract class Model<C> implements Identifiable, ModelChangeListener<Obje
 
     public final List<Variable<?>> getVariables() {
         return Collections.unmodifiableList(variables);
-    }
-
-    public final int getVariableCount() {
-        return variables.size();
     }
 
     /**
@@ -133,10 +133,6 @@ public abstract class Model<C> implements Identifiable, ModelChangeListener<Obje
         storeListeners.remove(listener);
     }
 
-    public final boolean isUsed() {
-        return changeListeners.size() + storeListeners.size() > 0;
-    }
-
     /**
      * Fires a model changed event.
      */
@@ -148,40 +144,27 @@ public abstract class Model<C> implements Identifiable, ModelChangeListener<Obje
         changeListeners.forEach(l -> l.modelChangedEvent(change));
     }
 
-    private void fireModelChanged(final Variable.ChangeEvent change) {
-        changeListeners.forEach(l -> l.modelChangedEvent(change));
-    }
-
     @Override
     public final void modelChangedEvent(final Object change) {
         fireModelChanged();
     }
-    @Override
-    public final void modelChangedEvent(final Variable.ChangeEvent change) {
-        fireModelChanged();
-    }
 
-    @Override
-    public final void variableChangedEvent(final Variable.ChangeEvent change) {
-        fireModelChanged(change);
-    }
-
-    public final void storeModelState() {
-        models.forEach(Model::storeModelState);
+    public final void storeState() {
+        models.forEach(Model::storeState);
         variables.forEach(Variable::storeValues);
-        storeState();
+        storeModelState();
         storeListeners.forEach(ModelStoreListener::modelStored);
     }
 
     /**
      * Additional state information, outside of the sub-model is stored by this call.
      */
-    protected abstract void storeState();
+    protected abstract void storeModelState();
 
-    public final void restoreModelState() {
-        models.forEach(Model::restoreModelState);
+    public final void restoreState() {
+        models.forEach(Model::restoreState);
         variables.forEach(Variable::restoreValues);
-        restoreState();
+        restoreModelState();
         storeListeners.forEach(ModelStoreListener::modelRestored);
     }
 
@@ -190,11 +173,7 @@ public abstract class Model<C> implements Identifiable, ModelChangeListener<Obje
      * the values coinciding with the last storeState call.
      * Sub-models are handled automatically and do not need to be considered in this method.
      */
-    protected abstract void restoreState();
-
-    public final String getModelName() {
-        return name;
-    }
+    protected abstract void restoreModelState();
 
     @Override
     public final void setId(String id) {
@@ -208,7 +187,7 @@ public abstract class Model<C> implements Identifiable, ModelChangeListener<Obje
 
     @Override
     public String toString() {
-        return getModelName() + (getId() != null ? "[" + getId() + "]" : "");
+        return getName() + (getId() != null ? "[" + getId() + "]" : "");
     }
 
 }

@@ -39,7 +39,7 @@ public final class CompoundModel extends Model<Object> {
      * Additional state information, outside of the sub-model is stored by this call.
      */
     @Override
-    protected void storeState() {
+    protected void storeModelState() {
         // Nothing to do
     }
 
@@ -49,13 +49,13 @@ public final class CompoundModel extends Model<Object> {
      * Sub-models are handled automatically and do not need to be considered in this method.
      */
     @Override
-    protected void restoreState() {
+    protected void restoreModelState() {
         // Nothing to do
     }
 
     @Override
     public String toString() {
-        return getModelName() + "{" + getModels().stream().map(Model::toString).collect(Collectors.joining(", ")) + "}";
+        return getName() + "{" + getModels().stream().map(Model::toString).collect(Collectors.joining(", ")) + "}";
     }
 
 }

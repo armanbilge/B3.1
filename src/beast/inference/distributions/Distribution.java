@@ -109,12 +109,12 @@ public abstract class Distribution extends Model {
     public abstract double variance();
 
     @Override
-    public void storeState() {
+    public void storeModelState() {
         // Nothing to do
     }
 
     @Override
-    public void restoreState() {
+    public void restoreModelState() {
         // Nothing to do
     }
 

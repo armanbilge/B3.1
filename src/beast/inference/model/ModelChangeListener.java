@@ -27,10 +27,11 @@ package beast.inference.model;
  * @author Andrew Rambaut
  * @author Arman Bilge
  */
+@FunctionalInterface
 public interface ModelChangeListener<C> {
 
     default void modelChangedEvent() {
-        modelChangedEvent((C) null);
+        modelChangedEvent(null);
     }
 
     /**
@@ -40,7 +41,5 @@ public interface ModelChangeListener<C> {
      * model it was that fired the event.
      */
     void modelChangedEvent(C change);
-
-    void modelChangedEvent(Variable.ChangeEvent change);
 
 }
