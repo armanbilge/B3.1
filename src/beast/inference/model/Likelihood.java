@@ -41,7 +41,7 @@ import java.util.stream.Stream;
 public abstract class Likelihood implements Identifiable, Loggable, ModelChangeListener<Object>, ModelStoreListener {
 
     private String id;
-    private boolean used;
+    private boolean used = false;
     private boolean likelihoodKnown = false;
     private boolean storedLikelihoodKnown;
     private double logLikelihood;
