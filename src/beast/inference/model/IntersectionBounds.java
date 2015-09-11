@@ -53,7 +53,7 @@ public final class IntersectionBounds<V> implements Bounds<V> {
 
     @Override
     public V getLowerLimit(int dimension) {
-        return bounds.stream().map(b -> b.getUpperLimit(dimension)).max(comparator).orElse(lower);
+        return bounds.stream().map(b -> b.getLowerLimit(dimension)).max(comparator).orElse(lower);
     }
 
     @Override
