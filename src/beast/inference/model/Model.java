@@ -20,6 +20,7 @@
 
 package beast.inference.model;
 
+import beast.inference.model.Variable.ChangeEvent;
 import beast.xml.Identifiable;
 
 import java.util.ArrayList;
@@ -146,6 +147,11 @@ public abstract class Model<C> implements Identifiable, ModelChangeListener<Obje
 
     @Override
     public final void modelChangedEvent(final Object change) {
+        fireModelChanged();
+    }
+
+    @Override
+    public final void variableChangedEvent(final ChangeEvent change) {
         fireModelChanged();
     }
 
