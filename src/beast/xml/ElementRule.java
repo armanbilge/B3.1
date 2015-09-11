@@ -30,7 +30,7 @@ import java.util.Set;
  * @author Andrew Rambaut
  * @author Arman Bilge
  */
-public abstract class ElementRule implements XMLSyntaxRule {
+public abstract class ElementRule extends XMLSyntaxRule {
 
     private final String description;
     private final int min;

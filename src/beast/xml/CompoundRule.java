@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 /**
  * @author Arman Bilge
  */
-abstract class CompoundRule implements XMLSyntaxRule {
+abstract class CompoundRule extends XMLSyntaxRule {
 
     private final Set<XMLSyntaxRule> rules;
     private final String operator;

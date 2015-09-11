@@ -26,7 +26,7 @@ import java.util.Set;
 /**
  * @author Arman Bilge
  */
-public final class AttributeRule<T> implements XMLSyntaxRule {
+public final class AttributeRule<T> extends XMLSyntaxRule {
 
     private final String name;
     private final Class<T> c;

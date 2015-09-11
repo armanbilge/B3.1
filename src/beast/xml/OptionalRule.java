@@ -25,7 +25,7 @@ import java.util.Set;
 /**
  * @author Arman Bilge
  */
-final class OptionalRule implements XMLSyntaxRule {
+final class OptionalRule extends XMLSyntaxRule {
 
     private final XMLSyntaxRule rule;
 
