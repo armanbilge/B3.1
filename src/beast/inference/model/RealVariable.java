@@ -89,32 +89,41 @@ public abstract class RealVariable extends Variable<Double> {
 
     public final class RealBounds implements Bounds<Double> {
 
-        final double lower;
-        final double upper;
+        private final double[] lower;
+        private final double[] upper;
 
-        private RealBounds(final double lower, final double upper) {
+        public RealBounds(final double[] lower, final double[] upper) {
+            if (lower.length != getDimension() || upper.length != getDimension())
+                throw new IllegalArgumentException("Wrong number of dimensions.");
             this.lower = lower;
             this.upper = upper;
         }
 
+        public RealBounds(final double lower, final double upper) {
+            this.lower = new double[getDimension()];
+            Arrays.fill(this.lower, lower);
+            this.upper = new double[getDimension()];
+            Arrays.fill(this.upper, upper);
+        }
+
         @Override
         public Double getUpperLimit(int dimension) {
-            return upper;
+            return upper[dimension];
         }
 
         @Override
         public Stream<Double> getUpperLimits() {
-            return IntStream.range(0, this.getDimension()).mapToObj(i -> upper);
+            return Arrays.stream(upper).boxed();
         }
 
         @Override
         public Double getLowerLimit(int dimension) {
-            return lower;
+            return lower[dimension];
         }
 
         @Override
         public Stream<Double> getLowerLimits() {
-            return IntStream.range(0, this.getDimension()).mapToObj(i -> lower);
+            return Arrays.stream(lower).boxed();
         }
 
         @Override
