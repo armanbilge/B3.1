@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 /**
  * @author Arman Bilge
  */
-public final class IntersectionBounds<V> implements Bounds<V> {
+public final class IntersectionBounds<V extends Comparable<V>> implements Bounds<V> {
 
     private final int dimension;
     private final Comparator<V> comparator;
