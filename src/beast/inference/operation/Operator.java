@@ -29,9 +29,29 @@ import beast.util.Identifiable;
  * @author Andrew Rambaut
  * @author Arman Bilge
  */
-public interface Operator extends Identifiable {
+public abstract class Operator implements Identifiable {
 
-    String WEIGHT = "weight";
+    private final String name;
+    private final double weight;
+
+    private String id;
+
+    private int acceptCount = 0;
+    private int rejectCount = 0;
+
+    private double sumDeviation = 0.0;
+
+    private boolean operateAllowed = true;
+
+    private long totalEvaluationTime = 0;
+
+    protected Operator(final String name, final double weight) {
+        this.name = name;
+        if (weight > 0)
+            this.weight = weight;
+        else
+            throw new IllegalArgumentException("Weight must be a positive real, but tried to set weight to " + weight + ".");
+    }
 
     /**
      * operates on the model.
@@ -39,34 +59,65 @@ public interface Operator extends Identifiable {
      * @return the log hastings ratio of this operator.
      * @throws OperatorFailedException if the operator failed and should be rejected
      */
-    double operate() throws OperatorFailedException;
+    public abstract double operate() throws OperatorFailedException;
 
     /**
      * Called to tell operator that operation was accepted
      *
      * @param deviation the log ratio accepted on
      */
-    void accept(double deviation);
+    public final void accept(final double deviation) {
+        if (!operateAllowed) {
+            operateAllowed = true;
+            ++acceptCount;
+            sumDeviation += deviation;
+        } else {
+            throw new RuntimeException("Accept/reject methods called twice without operate called in between!");
+        }
+        handleAccept(deviation);
+    }
+
+    protected void handleAccept(final double deviation) {
+        // Nothing by default
+    }
 
     /**
      * Called to tell operator that operation was rejected
      */
-    void reject();
+    public final void reject() {
+        if (!operateAllowed) {
+            operateAllowed = true;
+            ++rejectCount;
+        } else {
+            throw new RuntimeException("Accept/reject methods called twice without operate called in between!");
+        }
+        handleReject();
+    }
+
+    protected void handleReject() {
+        // Do nothing by default
+    }
 
     /**
      * Reset operator acceptance records.
      */
-    void reset();
+    public final void reset() {
+        operateAllowed = true;
+        acceptCount = 0;
+        rejectCount = 0;
+        sumDeviation = 0.0;
+    }
 
-    /**
-     * @return the total number of operations since last call to reset().
-     */
-    int getCount();
+    public final int getOperationCount() {
+        return getAcceptCount() + getRejectCount();
+    }
 
     /**
      * @return the number of acceptances since last call to reset().
      */
-    int getAcceptCount();
+    public final int getAcceptCount() {
+        return acceptCount;
+    }
 
     /**
      * Set the number of acceptances since last call to reset(). This is used
@@ -74,12 +125,16 @@ public interface Operator extends Identifiable {
      *
      * @param acceptCount number of acceptances
      */
-    void setAcceptCount(int acceptCount);
+    public final void setAcceptCount(final int acceptCount) {
+        this.acceptCount = acceptCount;
+    }
 
     /**
      * @return the number of rejections since last call to reset().
      */
-    int getRejectCount();
+    public final int getRejectCount() {
+        return this.rejectCount;
+    }
 
     /**
      * Set the number of rejections since last call to reset(). This is used
@@ -87,79 +142,102 @@ public interface Operator extends Identifiable {
      *
      * @param rejectCount number of rejections
      */
-    void setRejectCount(int rejectCount);
+    public final void setRejectCount(int rejectCount) {
+        this.rejectCount = rejectCount;
+    }
 
     /**
      * @return the mean deviation in log posterior per accepted operations.
      */
-    double getMeanDeviation();
+    public final double getMeanDeviation() {
+        return sumDeviation / acceptCount;
+    }
 
-    double getSumDeviation();
+    public final double getSumDeviation() {
+        return sumDeviation;
+    }
 
-    void setSumDeviation(double sumDeviation);
+    public final void setSumDeviation(double sumDeviation) {
+        this.sumDeviation = sumDeviation;
+    }
 
     /**
      * @return the optimal acceptance probability
      */
-    double getTargetAcceptanceProbability();
+    public double getTargetAcceptanceProbability() {
+        return 0.234;
+    }
 
     /**
      * @return the minimum acceptable acceptance probability
      */
-    double getMinimumAcceptanceLevel();
+    public double getMinimumAcceptanceLevel() {
+        return 0.05;
+    }
 
     /**
      * @return the maximum acceptable acceptance probability
      */
-    double getMaximumAcceptanceLevel();
+    public double getMaximumAcceptanceLevel() {
+        return 0.5;
+    }
 
     /**
      * @return the minimum good acceptance probability
      */
-    double getMinimumGoodAcceptanceLevel();
+    public double getMinimumGoodAcceptanceLevel() {
+        return 0.1;
+    }
 
     /**
      * @return the maximum good acceptance probability
      */
-    double getMaximumGoodAcceptanceLevel();
+    public double getMaximumGoodAcceptanceLevel() {
+        return 0.4;
+    }
 
     /**
      * @return a short descriptive message of the performance of this operator.
      */
-    String getPerformanceSuggestion();
+    public abstract String getPerformanceSuggestion();
 
     /**
      * @return the relative weight of this operator.
      */
-    double getWeight();
-
-    /**
-     * sets the weight of this operator. The weight
-     * determines the proportion of time spent using
-     * this operator. This is relative to a 'standard'
-     * operator weight of 1.
-     *
-     * @param weight the relative weight of this parameter - should be positive.
-     */
-    void setWeight(double weight);
+    public final double getWeight() {
+        return weight;
+    }
 
     /**
      * @return the name of this operator
      */
-    String getName();
-
-    double getMeanEvaluationTime();
-
-    void addEvaluationTime(long time);
-
-    long getTotalEvaluationTime();
-
-    default int getOperationCount() {
-        return getAcceptCount() + getRejectCount();
+    public final String getName() {
+        return name;
     }
 
-    default double getAcceptanceProbability() {
+    public double getMeanEvaluationTime() {
+        return totalEvaluationTime / (double) getOperationCount();
+    }
+
+    public final void addEvaluationTime(final long time) {
+        totalEvaluationTime += time;
+    }
+
+    public final long getTotalEvaluationTime() {
+        return totalEvaluationTime;
+    }
+
+    public final double getAcceptanceProbability() {
         return getAcceptCount() / (double) getOperationCount();
     }
 
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(final String id) {
+        this.id = id;
+    }
 }
