@@ -1,5 +1,5 @@
 /*
- * StringAttribute.java
+ * Identifiable.java
  *
  * BEAST: Bayesian Evolutionary Analysis by Sampling Trees
  * Copyright (C) 2015 BEAST Developers
@@ -18,25 +18,25 @@
  * License along with BEAST.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package beast.xml;
+package beast.util;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.io.Serializable;
 
 /**
- * @author Arman Bilge
+ * An interface for supplying an Id for a data object.
+ *
+ * @author Andrew Rambaut
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
-public @interface StringAttribute {
+public interface Identifiable extends Serializable {
 
-    String name();
-    boolean optional() default false;
-    String defaultValue() default "";
-    String description() default "";
+    /**
+     * @return the id as a string.
+     */
+    String getId();
 
+    /**
+     * set the id as a string.
+     */
+    void setId(String id);
 }
+

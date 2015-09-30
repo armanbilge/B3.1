@@ -22,7 +22,7 @@ package beast.inference.model;
 
 import beast.inference.logging.LogColumn;
 import beast.inference.logging.Loggable;
-import beast.xml.Identifiable;
+import beast.util.Identifiable;
 
 import java.util.ArrayList;
 import java.util.Arrays;

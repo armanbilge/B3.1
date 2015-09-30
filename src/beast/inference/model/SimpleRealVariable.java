@@ -20,21 +20,7 @@
 
 package beast.inference.model;
 
-import beast.inference.distributions.Distribution;
-import beast.xml.AbstractXMLObjectParser;
-import beast.xml.AndRule;
-import beast.xml.AttributeRule;
-import beast.xml.ElementRule;
-import beast.xml.XMLObject;
-import beast.xml.XMLObjectParser;
-import beast.xml.XMLParseException;
-import beast.xml.XMLSyntaxRule;
-
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.function.IntToDoubleFunction;
 import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
 
@@ -95,102 +81,5 @@ public final class SimpleRealVariable extends RealVariable {
         values = storedValues;
         storedValues = values;
     }
-
-    /**
-     * Parses a multi-dimensional continuous parameter.
-     *
-     * @author Alexei Drummond
-     * @author Andrew Rambaut
-     * @author Arman Bilge
-     */
-    public static final XMLObjectParser<SimpleRealVariable> PARSER = new AbstractXMLObjectParser<SimpleRealVariable>() {
-
-        private static final String DIMENSION = "dimension";
-        private static final String VALUE = "value";
-        private static final String LOWER = "lower";
-        private static final String UPPER = "upper";
-        private static final String RANDOMIZE = "randomize";
-
-        private final XMLSyntaxRule rule = AndRule.newAndRule(
-                AttributeRule.newIntegerRule(DIMENSION, true),
-                AttributeRule.newDoubleArrayRule(VALUE, true),
-                AttributeRule.newDoubleArrayRule(LOWER, true),
-                AttributeRule.newDoubleArrayRule(UPPER, true),
-                ElementRule.newElementRule(RANDOMIZE, Distribution.class, true)
-        );
-
-        @Override
-        public Class<SimpleRealVariable> getReturnType() {
-            return SimpleRealVariable.class;
-        }
-
-        @Override
-        public String getName() {
-            return "variable";
-        }
-
-        @Override
-        public Set<String> getNames() {
-            final Set<String> names = new HashSet<>(super.getNames());
-            names.add("realVariable");
-            names.add("simpleRealVariable");
-            return Collections.unmodifiableSet(names);
-        }
-
-        @Override
-        public String getDescription() {
-            return "A real-valued variable of one or more dimensions.";
-        }
-
-        @Override
-        public XMLSyntaxRule getSyntaxRule() {
-            return rule;
-        }
-
-        @Override
-        protected SimpleRealVariable parseXMLObject(final XMLObject xo) throws XMLParseException {
-
-            final int givenDimension = xo.getAttribute(DIMENSION, 0);
-            final double[] value = xo.getAttribute(VALUE, new double[0]);
-
-            final int dimension = Math.max(givenDimension, value.length);
-
-            if (dimension < 1)
-                throw new XMLParseException("Variable must have at least one dimension.");
-
-            if (givenDimension > 0 && value.length > 1 && givenDimension != value.length)
-                throw new XMLParseException("Variable dimension and values must be the same.");
-
-            final SimpleRealVariable variable;
-            if (value.length == 1)
-                variable = new SimpleRealVariable(xo.getId(), dimension, value[0]);
-            else if (value.length > 1)
-                variable = new SimpleRealVariable(xo.getId(), value);
-            else
-                variable = new SimpleRealVariable(xo.getId(), dimension);
-
-            final double[] lower = xo.getAttribute(LOWER, new double[dimension]);
-            final double[] upper = xo.getAttribute(UPPER, new double[dimension]);
-            if (!xo.hasAttribute(UPPER))
-                Arrays.fill(upper, Double.POSITIVE_INFINITY);
-
-            variable.addBounds(variable.new RealBounds(lower, upper));
-
-            if (xo.hasAttribute(RANDOMIZE)) {
-                final Distribution distribution = xo.getChild(RANDOMIZE).get().getChild(Distribution.class).get();
-                final Bounds<Double> bounds = variable.getBounds();
-                variable.setAll((IntToDoubleFunction) i -> {
-                    double v;
-                    do {
-                        v = distribution.sample();
-                    } while (!bounds.inBounds(i, v));
-                    return v;
-                });
-            }
-
-            return variable;
-        }
-
-    };
 
 }

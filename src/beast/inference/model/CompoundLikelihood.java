@@ -20,10 +20,6 @@
 
 package beast.inference.model;
 
-import beast.xml.IntegerAttribute;
-import beast.xml.ObjectArrayElement;
-import beast.xml.Parseable;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -42,8 +38,6 @@ import java.util.concurrent.TimeUnit;
  * @author Arman Bilge
  */
 public final class CompoundLikelihood extends Likelihood {
-
-    private static final String LIKELIHOODS = "likelihoods";
 
     private final int threadCount;
     private final boolean unroll;
@@ -82,17 +76,11 @@ public final class CompoundLikelihood extends Likelihood {
             pool = null;
     }
 
-    @Parseable(synonyms = {"likelihood", "prior"},
-            description = "A likelihood function which is simply the product of a set of likelihood functions.")
-    public CompoundLikelihood(@IntegerAttribute(name = "threads", optional = true, defaultValue = -1) final int threads,
-                              @ObjectArrayElement(name = LIKELIHOODS) final Likelihood... likelihoods) {
+    public CompoundLikelihood(final int threads, final Likelihood... likelihoods) {
         this(true, threads, likelihoods);
     }
 
-    @Parseable(className = false,
-            synonyms = {"posterior"},
-            description = "The posterior is the product of the likelihood and the prior.")
-    public CompoundLikelihood(@ObjectArrayElement(name = LIKELIHOODS) final Likelihood... likelihoods) {
+    public CompoundLikelihood(final Likelihood... likelihoods) {
         this(false, 0, likelihoods);
     }
 

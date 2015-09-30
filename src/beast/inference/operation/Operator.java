@@ -20,7 +20,7 @@
 
 package beast.inference.operation;
 
-import beast.xml.Identifiable;
+import beast.util.Identifiable;
 
 /**
  * An MCMC operator.
